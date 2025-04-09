@@ -28,7 +28,7 @@ export default function PolishingSimulator() {
     const segments = 200;
     
     for (let i = 0; i < segments; i++) {
-      const radius = 1.5 + (i / segments) * 0.5; // Increase radius over time
+      const radius = 1.5 * i / segments;
       const theta1 = (i / segments) * Math.PI * 2 * turns;
       const theta2 = ((i + 1) / segments) * Math.PI * 2 * turns;
       const x1 = radius * Math.cos(theta1);
