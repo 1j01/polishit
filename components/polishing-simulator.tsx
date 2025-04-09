@@ -1,13 +1,14 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { Canvas } from "@react-three/fiber"
-import { OrbitControls, Environment, ContactShadows } from "@react-three/drei"
+import { OrbitControls, Environment, ContactShadows, PerformanceMonitor } from "@react-three/drei"
 import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "./turd-geometry"
 import { Monitor, PlummetingLine } from "./markets"
 
 export default function PolishingSimulator() {
+  const [degraded, setDegraded] = useState(false)
   const turdGeometry = useMemo(makeTurdGeometry, [])
   return (
     <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
@@ -16,9 +17,11 @@ export default function PolishingSimulator() {
       <Polishable>
         <primitive object={turdGeometry} />
       </Polishable>
-      <PlummetingLine />
-      <Monitor />
-      <Environment preset="studio" />
+      <Environment preset="studio" frames={degraded ? 1 : Infinity} resolution={256} >
+        <PlummetingLine />
+        <Monitor />
+      </Environment>
+      <PerformanceMonitor onDecline={() => setDegraded(true)} />
       <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={5} blur={2.5} far={4} />
       <OrbitControls
         makeDefault
