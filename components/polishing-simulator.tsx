@@ -99,7 +99,23 @@ function PolishableSphere() {
         const canvasY = Math.floor((1 - uv.y) * canvasRef.current.height)
 
         // Draw a polishing spot (darker = less rough)
+        // drawPolishingSpot(canvasX, canvasY)
+        // Wrap to avoid seams. There will still be ugliness at the poles, but no hard edge running between the poles.
+        for (let xRepetition = -1; xRepetition <= 1; xRepetition++) {
+          for (let yRepetition = -1; yRepetition <= 1; yRepetition++) {
+            drawPolishingSpot(canvasX + xRepetition * canvasRef.current.width, canvasY + yRepetition * canvasRef.current.height)
+          }
+        }
+
+        // Update the texture
+        if (roughnessMapRef.current) {
+          roughnessMapRef.current.needsUpdate = true
+        }
+      }
+
+      function drawPolishingSpot(canvasX: number, canvasY: number) {
         const context = contextRef.current
+        if (!context) return
         const radius = 30
         const gradient = context.createRadialGradient(canvasX, canvasY, 0, canvasX, canvasY, radius)
         gradient.addColorStop(0, "rgba(32, 32, 32, 0.2)") // Very dark gray for very low roughness
@@ -110,11 +126,6 @@ function PolishableSphere() {
         context.beginPath()
         context.arc(canvasX, canvasY, radius, 0, Math.PI * 2)
         context.fill()
-
-        // Update the texture
-        if (roughnessMapRef.current) {
-          roughnessMapRef.current.needsUpdate = true
-        }
       }
     }
 
