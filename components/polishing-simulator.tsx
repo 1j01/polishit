@@ -174,7 +174,6 @@ function Polishable({ children }: { children: React.ReactNode }) {
         gradient.addColorStop(1, "transparent")
 
         context.fillStyle = gradient
-        context.globalCompositeOperation = "multiply"
         context.beginPath()
         context.arc(0, 0, radius, 0, Math.PI * 2)
         context.fill()
