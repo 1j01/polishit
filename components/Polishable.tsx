@@ -4,7 +4,7 @@ import { useThree, useFrame } from "@react-three/fiber"
 import { useRef, useState, useEffect, useMemo } from "react"
 import * as THREE from "three"
 
-export function Polishable({ children }: { children: React.ReactNode }) {
+export function Polishable({ children, onPolish }: { children: React.ReactNode, onPolish: (value: number) => void }) {
   const meshRef = useRef<THREE.Mesh>(null)
   const roughnessMapRef = useRef<THREE.CanvasTexture | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -70,6 +70,28 @@ export function Polishable({ children }: { children: React.ReactNode }) {
     }
   }
 
+  function measurePolish() {
+    // Could optimize by storing measures for buckets and only updating the ones that change
+    // Could improve by using a less binary measure (but would still probably want to ignore roughness values above a certain threshold)
+    // (and probably use that threshold as the bottom of the scale, i.e. make things that just pass it be near 0)
+    const context = contextRef.current
+    if (!context) return 0
+
+    // Get the image data from the canvas
+    const imageData = context.getImageData(0, 0, canvasRef.current!.width, canvasRef.current!.height)
+    const data = imageData.data
+
+    // Count the number of pixels that pass a threshold
+    let count = 0
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i] < 80) {
+        count++
+      }
+    }
+
+    return count / data.length
+  }
+
   // Handle mouse events
   useEffect(() => {
     if (!gl.domElement) return
@@ -123,6 +145,12 @@ export function Polishable({ children }: { children: React.ReactNode }) {
         // Update the texture
         if (roughnessMapRef.current) {
           roughnessMapRef.current.needsUpdate = true
+        }
+
+        // Measure the polish
+        const polishValue = measurePolish()
+        if (onPolish) {
+          onPolish(polishValue)
         }
       }
     }

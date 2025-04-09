@@ -9,12 +9,18 @@ import { Monitor, PlummetingLine } from "./markets"
 
 export default function PolishingSimulator() {
   const [degraded, setDegraded] = useState(false)
+  const [polish, setPolish] = useState(0)
   const turdGeometry = useMemo(makeTurdGeometry, [])
-  return (
+  const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
+  return (<>
+    <div style={{ position: "absolute", top: 0, left: 0, padding: "1rem" }}>
+      <div style={{ fontSize: "2rem" }}>Polish: {(polish / maxPolishable * 100).toFixed(0)}%</div>
+      <div style={{ fontSize: "0.9rem" }}>{degraded ? "Some visual effects have been disabled for performance." : ""}</div>
+    </div>
     <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
       <ambientLight intensity={0.5} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
-      <Polishable>
+      <Polishable onPolish={setPolish}>
         <primitive object={turdGeometry} />
       </Polishable>
       <Environment preset="studio" frames={degraded ? 1 : Infinity} resolution={256} >
@@ -32,5 +38,5 @@ export default function PolishingSimulator() {
         maxDistance={16}
       />
     </Canvas>
-  )
+  </>)
 }
