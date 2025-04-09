@@ -28,7 +28,7 @@ export default function PolishingSimulator() {
     })
 
     return new TubeGeometryExt(curve, segments, 0.9, 8, false, false, (t) => {
-      return Math.pow(1 - t, 0.1) * Math.pow(t, 0.1);
+      return Math.pow(1 - t, 0.3) * Math.pow(t, 0.12);
     });
 
   }, [])
