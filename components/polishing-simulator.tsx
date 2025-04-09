@@ -5,7 +5,7 @@ import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Environment, ContactShadows } from "@react-three/drei"
 import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "./turd-geometry"
-import { PlummetingLine } from "./markets"
+import { Monitor, PlummetingLine } from "./markets"
 
 export default function PolishingSimulator() {
   const turdGeometry = useMemo(makeTurdGeometry, [])
@@ -17,6 +17,7 @@ export default function PolishingSimulator() {
         <primitive object={turdGeometry} />
       </Polishable>
       <PlummetingLine />
+      <Monitor />
       <Environment preset="studio" />
       <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={5} blur={2.5} far={4} />
       <OrbitControls

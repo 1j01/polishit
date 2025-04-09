@@ -6,41 +6,39 @@ import { useFrame } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
 import { FunctionCurve3 } from '@/lib/FunctionCurve3'
 
-// export function Monitor() {
-//   // const [video] = useState(() => Object.assign(document.createElement('video'), { src: '/drei_r.mp4', crossOrigin: 'Anonymous', loop: true, muted: true }))
-//   // useEffect(() => void video.play(), [video])
-//   const canvas = useMemo(() => {
-//     const canvas = document.createElement('canvas')
-//     canvas.width = 1024
-//     canvas.height = 1024
-//     return canvas
-//   }, [])
+export function Monitor() {
+  const canvas = useMemo(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 1024
+    canvas.height = 1024
+    return canvas
+  }, [])
 
-//   useFrame(() => {
-//     const context = canvas.getContext('2d')
-//     if (!context) return null
-//     context.fillStyle = 'black'
-//     context.fillRect(0, 0, canvas.width, canvas.height)
-//     context.fillStyle = 'white'
-//     context.font = 'bold 48px sans-serif'
-//     context.textAlign = 'center'
-//     context.textBaseline = 'middle'
-//     context.fillText('Polishing Simulator', canvas.width / 2, canvas.height / 2)
-//     context.font = 'bold 24px sans-serif'
-//     context.fillText('Click and drag to polish', canvas.width / 2, canvas.height / 2 + 50)
-//     context.font = 'bold 50px sans-serif'
-//     context.fillText('😵‍💫', canvas.width / 2, canvas.height - 20)
-//   }, 1000 / 30)
+  useFrame(() => {
+    const context = canvas.getContext('2d')
+    if (!context) return null
+    context.fillStyle = 'black'
+    context.fillRect(0, 0, canvas.width, canvas.height)
+    context.fillStyle = 'white'
+    context.font = 'bold 500px sans-serif'
+    context.fillText('😵‍💫', canvas.width / 2, canvas.height - 200)
+    context.font = 'bold 48px sans-serif'
+    context.textAlign = 'center'
+    context.textBaseline = 'middle'
+    context.fillText('Polishing Simulator', canvas.width / 2, canvas.height / 2)
+    context.font = 'bold 24px sans-serif'
+    context.fillText('Click and drag to polish', canvas.width / 2, canvas.height / 2 + 50)
+  })
 
-//   return (
-//     <mesh position={[-2, 4, 0]} rotation={[0, Math.PI / 2, 0]} scale={[17, 10, 1]}>
-//       <planeGeometry />
-//       <meshBasicMaterial toneMapped={false}>
-//         {/* <videoTexture attach="map" args={[video]} encoding={THREE.sRGBEncoding} /> */}
-//       </meshBasicMaterial>
-//     </mesh>
-//   )
-// }
+  return (
+    <mesh position={[-2, 4, 0]} rotation={[0, Math.PI / 2, 0]} scale={[17, 10, 1]}>
+      <planeGeometry />
+      <meshBasicMaterial toneMapped={false}>
+        <canvasTexture attach="map" args={[canvas]} colorSpace={THREE.SRGBColorSpace} />
+      </meshBasicMaterial>
+    </mesh>
+  )
+}
 
 // export function PlummetingLine({ pointsCount = 100, speed = 0.5 }) {
 //   const lineRef = useRef()
