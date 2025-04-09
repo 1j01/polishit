@@ -2,7 +2,7 @@
 
 import * as THREE from "three"
 import { FunctionCurve3 } from "@/lib/FunctionCurve3"
-import { TubeGeometryExt } from "@/lib/tube-geometry-ext"
+import { TubeGeometryExt } from "@/lib/TubeGeometryExt"
 
 export function makeTurdGeometry() {
   // Note: the length of the curve creates UV distortion that has to be counteracted
