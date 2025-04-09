@@ -42,6 +42,7 @@ export default function PolishingSimulator() {
       <Environment preset="studio" />
       <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={5} blur={2.5} far={4} />
       <OrbitControls
+        makeDefault
         enablePan={false}
         minPolarAngle={Math.PI * 0.0}
         maxPolarAngle={Math.PI * 0.8}
@@ -74,6 +75,9 @@ function Polishable({ children }: { children: React.ReactNode }) {
     contextRef.current = context
 
     // Fill with medium roughness (gray color)
+    // TODO: add some spots of higher roughness
+    // eliminating unevenness will be more satisfying than just polishing,
+    // especially when you have to create temporary unevenness to polish it.
     context.fillStyle = "#808080" // Medium gray for medium roughness
     context.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -86,13 +90,18 @@ function Polishable({ children }: { children: React.ReactNode }) {
     setIsInitialized(true)
   }, [])
 
+  const { get } = useThree()
+
   // Handle mouse events
   useEffect(() => {
     if (!gl.domElement) return
 
     const handleMouseDown = (event: MouseEvent) => {
-      isPolishing.current = true
-      polish(event)
+      if (getUV(event)) {
+        isPolishing.current = true
+        get().controls.enabled = false
+        polish(event)
+      }
     }
 
     const handleMouseMove = (event: MouseEvent) => {
@@ -103,9 +112,10 @@ function Polishable({ children }: { children: React.ReactNode }) {
 
     const handleMouseUp = () => {
       isPolishing.current = false
+      get().controls.enabled = true
     }
 
-    const polish = (event: MouseEvent) => {
+    const getUV = (event: MouseEvent) => {
       if (!meshRef.current || !contextRef.current || !canvasRef.current) return
 
       // Get mouse position in normalized device coordinates
@@ -121,6 +131,15 @@ function Polishable({ children }: { children: React.ReactNode }) {
       if (intersects.length > 0) {
         const uv = intersects[0].uv
         if (!uv) return
+        return uv
+      }
+      return null
+    }
+
+    const polish = (event: MouseEvent) => {
+      if (!meshRef.current || !contextRef.current || !canvasRef.current) return
+      const uv = getUV(event)
+      if (uv) {
 
         // Convert UV to canvas coordinates
         const canvasX = Math.floor(uv.x * canvasRef.current.width)
