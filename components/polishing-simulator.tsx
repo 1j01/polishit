@@ -29,6 +29,8 @@ export default function PolishingSimulator() {
     const segments = 2000;
 
     const curve = new FunctionCurve3((t, optionalTarget) => {
+      optionalTarget ??= new THREE.Vector3();
+
       const radius = 1.5 * (1 - t);
       const theta = t * Math.PI * 2 * turns;
       const x = radius * Math.cos(theta);
