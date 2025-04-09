@@ -6,12 +6,52 @@ import { OrbitControls, Environment, ContactShadows } from "@react-three/drei"
 import * as THREE from "three"
 
 export default function PolishingSimulator() {
+  const spiralGeometry = useMemo(() => {
+    // const curve = new THREE.CurvePath()
+    // const radius = 1.5
+    // const segments = 64
+    // const height = 2
+
+    // for (let i = 0; i < segments; i++) {
+    //   const theta = (i / segments) * Math.PI * 2
+    //   const x = radius * Math.cos(theta)
+    //   const y = radius * Math.sin(theta)
+    //   const z = (i / segments) * height
+    //   curve.add(new THREE.LineCurve3(new THREE.Vector3(x, y, z), new THREE.Vector3(x, y, z + 0.1)))
+    // }
+
+    // return new THREE.TubeGeometry(curve, segments, 0.05, 8, false)
+
+    const curve = new THREE.CurvePath<THREE.Vector3>();
+    const height = 2;
+    const turns = 3;
+    const segments = 200;
+    
+    for (let i = 0; i < segments; i++) {
+      const radius = 1.5 + (i / segments) * 0.5; // Increase radius over time
+      const theta1 = (i / segments) * Math.PI * 2 * turns;
+      const theta2 = ((i + 1) / segments) * Math.PI * 2 * turns;
+      const x1 = radius * Math.cos(theta1);
+      const y1 = radius * Math.sin(theta1);
+      const z1 = (i / segments) * height;
+      const x2 = radius * Math.cos(theta2);
+      const y2 = radius * Math.sin(theta2);
+      const z2 = ((i + 1) / segments) * height;
+      
+      curve.add(new THREE.LineCurve3(new THREE.Vector3(x1, y1, z1), new THREE.Vector3(x2, y2, z2)));
+    }
+    
+    return new THREE.TubeGeometry(curve, segments, 0.9, 8, false);
+
+    // const geometry = new THREE.CylinderGeometry(1.5, 1.5, 2, 64, 64)
+  }, [])
   return (
     <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
       <ambientLight intensity={0.5} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
       <Polishable>
-        <sphereGeometry args={[1.5, 64, 64]} />
+        {/* <sphereGeometry args={[1.5, 64, 64]} /> */}
+        <primitive object={spiralGeometry} />
       </Polishable>
       <Environment preset="studio" />
       <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={5} blur={2.5} far={4} />
