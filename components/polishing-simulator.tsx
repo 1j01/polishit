@@ -28,15 +28,15 @@ export default function PolishingSimulator() {
     const segments = 200;
     
     for (let i = 0; i < segments; i++) {
-      const radius = 1.5 * i / segments;
+      const radius = 1.5 * (1 - i / segments);
       const theta1 = (i / segments) * Math.PI * 2 * turns;
       const theta2 = ((i + 1) / segments) * Math.PI * 2 * turns;
       const x1 = radius * Math.cos(theta1);
-      const y1 = radius * Math.sin(theta1);
-      const z1 = (i / segments) * height;
+      const z1 = radius * Math.sin(theta1);
+      const y1 = (i / segments) * height;
       const x2 = radius * Math.cos(theta2);
-      const y2 = radius * Math.sin(theta2);
-      const z2 = ((i + 1) / segments) * height;
+      const z2 = radius * Math.sin(theta2);
+      const y2 = ((i + 1) / segments) * height;
       
       curve.add(new THREE.LineCurve3(new THREE.Vector3(x1, y1, z1), new THREE.Vector3(x2, y2, z2)));
     }
