@@ -43,10 +43,10 @@ export default function PolishingSimulator() {
       <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={5} blur={2.5} far={4} />
       <OrbitControls
         enablePan={false}
-        minPolarAngle={Math.PI / 4}
-        maxPolarAngle={Math.PI / 1.5}
+        minPolarAngle={Math.PI * 0.0}
+        maxPolarAngle={Math.PI * 0.8}
         minDistance={3}
-        maxDistance={6}
+        maxDistance={16}
       />
     </Canvas>
   )
