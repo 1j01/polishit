@@ -9,21 +9,8 @@ import { TubeGeometryExt } from "@/lib/tube-geometry-ext"
 
 export default function PolishingSimulator() {
   const spiralGeometry = useMemo(() => {
-    // const curve = new THREE.CurvePath()
-    // const radius = 1.5
-    // const segments = 64
-    // const height = 2
-
-    // for (let i = 0; i < segments; i++) {
-    //   const theta = (i / segments) * Math.PI * 2
-    //   const x = radius * Math.cos(theta)
-    //   const y = radius * Math.sin(theta)
-    //   const z = (i / segments) * height
-    //   curve.add(new THREE.LineCurve3(new THREE.Vector3(x, y, z), new THREE.Vector3(x, y, z + 0.1)))
-    // }
-
-    // return new THREE.TubeGeometry(curve, segments, 0.05, 8, false)
-
+    // Note: the length of the curve creates UV distortion that has to be counteracted
+    // when drawing on the roughness map (without a fancier brushing algorithm).
     const height = 2;
     const turns = 3;
     const segments = 2000;
@@ -161,16 +148,20 @@ function Polishable({ children }: { children: React.ReactNode }) {
       function drawPolishingSpot(canvasX: number, canvasY: number) {
         const context = contextRef.current
         if (!context) return
-        const radius = 30
-        const gradient = context.createRadialGradient(canvasX, canvasY, 0, canvasX, canvasY, radius)
+        context.save()
+        context.translate(canvasX, canvasY)
+        context.scale(0.2, 1) // TO COUNTERACT UNEQUAL UVS
+        const radius = 50
+        const gradient = context.createRadialGradient(0, 0, 0, 0, 0, radius)
         gradient.addColorStop(0, "rgba(32, 32, 32, 0.2)") // Very dark gray for very low roughness
         gradient.addColorStop(1, "transparent")
 
         context.fillStyle = gradient
         context.globalCompositeOperation = "multiply"
         context.beginPath()
-        context.arc(canvasX, canvasY, radius, 0, Math.PI * 2)
+        context.arc(0, 0, radius, 0, Math.PI * 2)
         context.fill()
+        context.restore()
       }
     }
 
