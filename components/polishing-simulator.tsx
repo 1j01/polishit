@@ -90,6 +90,32 @@ function Polishable({ children }: { children: React.ReactNode }) {
     setIsInitialized(true)
   }, [])
 
+  function drawPolishingSpot(canvasX: number, canvasY: number, radius = 50, color = "rgba(32, 32, 32, 0.2)") {
+    const context = contextRef.current
+    if (!context) return
+    context.save()
+    context.translate(canvasX, canvasY)
+    context.scale(0.2, 1) // TO COUNTERACT UNEQUAL UVS
+    const gradient = context.createRadialGradient(0, 0, 0, 0, 0, radius)
+    gradient.addColorStop(0, color)
+    gradient.addColorStop(1, "transparent")
+
+    context.fillStyle = gradient
+    context.beginPath()
+    context.arc(0, 0, radius, 0, Math.PI * 2)
+    context.fill()
+    context.restore()
+  }
+
+  function drawPolishingSpotWrapped(canvasX: number, canvasY: number, radius = 50, color = "rgba(32, 32, 32, 0.2)") {
+    // Wrap to avoid seams. There will still be ugliness at the poles, but no hard edge running between the poles.
+    for (let xRepetition = -1; xRepetition <= 1; xRepetition++) {
+      for (let yRepetition = -1; yRepetition <= 1; yRepetition++) {
+        drawPolishingSpot(canvasX + xRepetition * canvasRef.current!.width, canvasY + yRepetition * canvasRef.current!.height, radius, color)
+      }
+    }
+  }
+
   const { get } = useThree()
 
   // Handle mouse events
@@ -148,36 +174,12 @@ function Polishable({ children }: { children: React.ReactNode }) {
         const canvasY = Math.floor((1 - uv.y) * canvasRef.current.height)
 
         // Draw a polishing spot (darker = less rough)
-        // drawPolishingSpot(canvasX, canvasY)
-        // Wrap to avoid seams. There will still be ugliness at the poles, but no hard edge running between the poles.
-        for (let xRepetition = -1; xRepetition <= 1; xRepetition++) {
-          for (let yRepetition = -1; yRepetition <= 1; yRepetition++) {
-            drawPolishingSpot(canvasX + xRepetition * canvasRef.current.width, canvasY + yRepetition * canvasRef.current.height)
-          }
-        }
+        drawPolishingSpotWrapped(canvasX, canvasY)
 
         // Update the texture
         if (roughnessMapRef.current) {
           roughnessMapRef.current.needsUpdate = true
         }
-      }
-
-      function drawPolishingSpot(canvasX: number, canvasY: number) {
-        const context = contextRef.current
-        if (!context) return
-        context.save()
-        context.translate(canvasX, canvasY)
-        context.scale(0.2, 1) // TO COUNTERACT UNEQUAL UVS
-        const radius = 50
-        const gradient = context.createRadialGradient(0, 0, 0, 0, 0, radius)
-        gradient.addColorStop(0, "rgba(32, 32, 32, 0.2)") // Very dark gray for very low roughness
-        gradient.addColorStop(1, "transparent")
-
-        context.fillStyle = gradient
-        context.beginPath()
-        context.arc(0, 0, radius, 0, Math.PI * 2)
-        context.fill()
-        context.restore()
       }
     }
 
