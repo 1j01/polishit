@@ -4,7 +4,7 @@ import { useMemo, useState } from "react"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Environment, ContactShadows, PerformanceMonitor } from "@react-three/drei"
 import { Polishable } from "./Polishable"
-import { makeTurdGeometry } from "./turd-geometry"
+import { makeTurdGeometry } from "../lib/turd-geometry"
 import { Monitor, PlummetingLine } from "./markets"
 
 export default function PolishingSimulator() {
