@@ -132,7 +132,7 @@ function PolishableSphere() {
   // Create material with the roughness map
   const material = useMemo(() => {
     return new THREE.MeshStandardMaterial({
-      color: 0xcccccc,
+      color: "#cc6600",
       metalness: 1,
       roughnessMap: roughnessMapRef.current,
       roughness: 1,
