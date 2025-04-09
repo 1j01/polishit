@@ -28,19 +28,15 @@ export default function PolishingSimulator() {
     })
 
     return new TubeGeometryExt(curve, segments, 0.9, 8, false, false, (t) => {
-      // return 1 - t;
-      // return 1 - t * t;
       return Math.pow(1 - t, 0.1) * Math.pow(t, 0.1);
     });
 
-    // const geometry = new THREE.CylinderGeometry(1.5, 1.5, 2, 64, 64)
   }, [])
   return (
     <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
       <ambientLight intensity={0.5} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
       <Polishable>
-        {/* <sphereGeometry args={[1.5, 64, 64]} /> */}
         <primitive object={spiralGeometry} />
       </Polishable>
       <Environment preset="studio" />
@@ -187,7 +183,7 @@ function Polishable({ children }: { children: React.ReactNode }) {
   }, [isInitialized])
 
   // Slowly rotate the object
-  useFrame((_, delta) => {
+  useFrame((_: unknown, delta: number) => {
     if (meshRef.current && !isPolishing.current) {
       meshRef.current.rotation.y += delta * 0.1
     }
