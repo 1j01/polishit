@@ -13,7 +13,6 @@
   "search.exclude": {
     "**/dist": true, // Vite
     "**/build": true, // Reserved
-    "**/lib": true, // Reserved
     "**/out": true, // Reserved
     "**/*.tsbuildinfo": true,
     // The package lock files contain a lot of repetition, and are usually noise in search results.
@@ -29,13 +28,6 @@
     // Node.js
     "node_modules/**": true,
     "package-lock.json": true,
-    // Python
-    "lib/**": true,
-    "lib64/**": true,
-    ".venv/**": true,
-    "venv/**": true,
-    ".env/**": true,
-    "env/**": true,
   },
   // .----------------------------.
   // | Formatting                 |
