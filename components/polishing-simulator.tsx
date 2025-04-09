@@ -147,14 +147,6 @@ function Polishable({ children }: { children: React.ReactNode }) {
     const getUV = (event: MouseEvent) => {
       if (!meshRef.current || !contextRef.current || !canvasRef.current) return
 
-      // Get mouse position in normalized device coordinates
-      const rect = gl.domElement.getBoundingClientRect()
-      const x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-      const y = -((event.clientY - rect.top) / rect.height) * 2 + 1
-
-      // Update the raycaster
-      raycaster.setFromCamera(new THREE.Vector2(x, y), camera)
-
       // Check for intersections
       const intersects = raycaster.intersectObject(meshRef.current)
       if (intersects.length > 0) {
