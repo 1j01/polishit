@@ -99,6 +99,7 @@ function Polishable({ children }: { children: React.ReactNode }) {
     const handleMouseDown = (event: MouseEvent) => {
       if (getUV(event)) {
         isPolishing.current = true
+        // @ts-ignore
         get().controls.enabled = false
         polish(event)
       }
@@ -112,6 +113,7 @@ function Polishable({ children }: { children: React.ReactNode }) {
 
     const handleMouseUp = () => {
       isPolishing.current = false
+      // @ts-ignore
       get().controls.enabled = true
     }
 
