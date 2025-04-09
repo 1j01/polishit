@@ -7,6 +7,7 @@ import { Line } from '@react-three/drei'
 import { FunctionCurve3 } from '@/lib/FunctionCurve3'
 
 export function Monitor() {
+  const textureRef = useRef<THREE.CanvasTexture>(null!)
   const canvas = useMemo(() => {
     const canvas = document.createElement('canvas')
     canvas.width = 1024
@@ -17,24 +18,29 @@ export function Monitor() {
   useFrame(() => {
     const context = canvas.getContext('2d')
     if (!context) return null
+
     context.fillStyle = 'black'
     context.fillRect(0, 0, canvas.width, canvas.height)
-    context.fillStyle = 'white'
-    context.font = 'bold 500px sans-serif'
-    context.fillText('😵‍💫', canvas.width / 2, canvas.height - 200)
-    context.font = 'bold 48px sans-serif'
-    context.textAlign = 'center'
-    context.textBaseline = 'middle'
-    context.fillText('Polishing Simulator', canvas.width / 2, canvas.height / 2)
-    context.font = 'bold 24px sans-serif'
-    context.fillText('Click and drag to polish', canvas.width / 2, canvas.height / 2 + 50)
+
+    context.beginPath()
+    context.moveTo(0, canvas.height * 0.2)
+    for (let x = 1; x < canvas.width; x++) {
+      const t = x / canvas.width
+      const y = canvas.height * (0.2 + 0.8 * Math.pow(t + Math.random() * 0.1, 2)) // steep drop
+      context.lineTo(x, y)
+    }
+    context.strokeStyle = 'red'
+    context.lineWidth = 3
+    context.stroke()
+
+    textureRef.current.needsUpdate = true
   })
 
   return (
     <mesh position={[-2, 4, 0]} rotation={[0, Math.PI / 2, 0]} scale={[17, 10, 1]}>
       <planeGeometry />
       <meshBasicMaterial toneMapped={false}>
-        <canvasTexture attach="map" args={[canvas]} colorSpace={THREE.SRGBColorSpace} />
+        <canvasTexture attach="map" args={[canvas]} colorSpace={THREE.SRGBColorSpace} ref={textureRef} />
       </meshBasicMaterial>
     </mesh>
   )
