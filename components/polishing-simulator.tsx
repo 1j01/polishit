@@ -75,11 +75,14 @@ function Polishable({ children }: { children: React.ReactNode }) {
     contextRef.current = context
 
     // Fill with medium roughness (gray color)
-    // TODO: add some spots of higher roughness
-    // eliminating unevenness will be more satisfying than just polishing,
-    // especially when you have to create temporary unevenness to polish it.
     context.fillStyle = "#808080" // Medium gray for medium roughness
     context.fillRect(0, 0, canvas.width, canvas.height)
+    // Add some spots
+    for (let i = 0; i < 10000; i++) {
+      const x = Math.random() * canvas.width
+      const y = Math.random() * canvas.height
+      drawPolishingSpot(x, y, Math.random() * 20 + 5, `hsla(0, 0%, ${Math.random() * 100}%, 0.2)`)
+    }
 
     // Create the texture
     const texture = new THREE.CanvasTexture(canvas)
