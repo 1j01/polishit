@@ -10,7 +10,9 @@ export default function PolishingSimulator() {
     <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
       <ambientLight intensity={0.5} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
-      <PolishableSphere />
+      <Polishable>
+        <sphereGeometry args={[1.5, 64, 64]} />
+      </Polishable>
       <Environment preset="studio" />
       <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={5} blur={2.5} far={4} />
       <OrbitControls
@@ -24,7 +26,7 @@ export default function PolishingSimulator() {
   )
 }
 
-function PolishableSphere() {
+function Polishable({ children }: { children: React.ReactNode }) {
   const meshRef = useRef<THREE.Mesh>(null)
   const roughnessMapRef = useRef<THREE.CanvasTexture | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -150,7 +152,7 @@ function PolishableSphere() {
     })
   }, [isInitialized])
 
-  // Slowly rotate the sphere
+  // Slowly rotate the object
   useFrame((_, delta) => {
     if (meshRef.current && !isPolishing.current) {
       meshRef.current.rotation.y += delta * 0.1
@@ -159,7 +161,7 @@ function PolishableSphere() {
 
   return (
     <mesh ref={meshRef} material={material}>
-      <sphereGeometry args={[1.5, 64, 64]} />
+      {children}
     </mesh>
   )
 }
