@@ -38,7 +38,11 @@ export default function PolishingSimulator() {
       return optionalTarget.set(x, y, z);
     })
 
-    return new TubeGeometryExt(curve, segments, 0.9, 8, false);
+    return new TubeGeometryExt(curve, segments, 0.9, 8, false, false, (t) => {
+      // return 1 - t;
+      // return 1 - t * t;
+      return Math.pow(1 - t, 0.1) * Math.pow(t, 0.1);
+    });
 
     // const geometry = new THREE.CylinderGeometry(1.5, 1.5, 2, 64, 64)
   }, [])
