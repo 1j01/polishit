@@ -102,7 +102,7 @@ function PolishableSphere() {
         const context = contextRef.current
         const radius = 30
         const gradient = context.createRadialGradient(canvasX, canvasY, 0, canvasX, canvasY, radius)
-        gradient.addColorStop(0, "#202020") // Very dark gray for very low roughness
+        gradient.addColorStop(0, "rgba(32, 32, 32, 0.2)") // Very dark gray for very low roughness
         gradient.addColorStop(1, "transparent")
 
         context.fillStyle = gradient
