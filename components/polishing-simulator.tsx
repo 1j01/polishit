@@ -7,7 +7,7 @@ import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "./turd-geometry"
 
 export default function PolishingSimulator() {
-  const turdGeometry = useMemo(makeTurdGeometry, []);
+  const turdGeometry = useMemo(makeTurdGeometry, [])
   return (
     <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
       <ambientLight intensity={0.5} />
