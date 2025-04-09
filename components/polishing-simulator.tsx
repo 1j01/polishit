@@ -114,7 +114,7 @@ function Polishable({ children }: { children: React.ReactNode }) {
       const y = -((event.clientY - rect.top) / rect.height) * 2 + 1
 
       // Update the raycaster
-      raycaster.setFromCamera({ x, y }, camera)
+      raycaster.setFromCamera(new THREE.Vector2(x, y), camera)
 
       // Check for intersections
       const intersects = raycaster.intersectObject(meshRef.current)
