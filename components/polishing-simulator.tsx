@@ -5,6 +5,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { OrbitControls, Environment, ContactShadows } from "@react-three/drei"
 import * as THREE from "three"
 import { FunctionCurve3 } from "@/lib/FunctionCurve3"
+import { TubeGeometryExt } from "@/lib/tube-geometry-ext"
 
 export default function PolishingSimulator() {
   const spiralGeometry = useMemo(() => {
@@ -37,7 +38,7 @@ export default function PolishingSimulator() {
       return optionalTarget.set(x, y, z);
     })
 
-    return new THREE.TubeGeometry(curve, segments, 0.9, 8, false);
+    return new TubeGeometryExt(curve, segments, 0.9, 8, false);
 
     // const geometry = new THREE.CylinderGeometry(1.5, 1.5, 2, 64, 64)
   }, [])
