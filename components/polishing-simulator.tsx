@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useMemo } from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { OrbitControls, Environment, ContactShadows } from "@react-three/drei"
 import * as THREE from "three"
+import { FunctionCurve3 } from "@/lib/FunctionCurve3"
 
 export default function PolishingSimulator() {
   const spiralGeometry = useMemo(() => {
@@ -22,25 +23,20 @@ export default function PolishingSimulator() {
 
     // return new THREE.TubeGeometry(curve, segments, 0.05, 8, false)
 
-    const curve = new THREE.CurvePath<THREE.Vector3>();
     const height = 2;
     const turns = 3;
-    const segments = 200;
-    
-    for (let i = 0; i < segments; i++) {
-      const radius = 1.5 * (1 - i / segments);
-      const theta1 = (i / segments) * Math.PI * 2 * turns;
-      const theta2 = ((i + 1) / segments) * Math.PI * 2 * turns;
-      const x1 = radius * Math.cos(theta1);
-      const z1 = radius * Math.sin(theta1);
-      const y1 = (i / segments) * height;
-      const x2 = radius * Math.cos(theta2);
-      const z2 = radius * Math.sin(theta2);
-      const y2 = ((i + 1) / segments) * height;
-      
-      curve.add(new THREE.LineCurve3(new THREE.Vector3(x1, y1, z1), new THREE.Vector3(x2, y2, z2)));
-    }
-    
+    const segments = 2000;
+
+    const curve = new FunctionCurve3((t, optionalTarget) => {
+      const radius = 1.5 * (1 - t);
+      const theta = t * Math.PI * 2 * turns;
+      const x = radius * Math.cos(theta);
+      const z = radius * Math.sin(theta);
+      const y = t * height;
+
+      return optionalTarget.set(x, y, z);
+    })
+
     return new THREE.TubeGeometry(curve, segments, 0.9, 8, false);
 
     // const geometry = new THREE.CylinderGeometry(1.5, 1.5, 2, 64, 64)
