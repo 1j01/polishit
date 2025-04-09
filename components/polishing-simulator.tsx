@@ -60,7 +60,7 @@ function Polishable({ children }: { children: React.ReactNode }) {
   const contextRef = useRef<CanvasRenderingContext2D | null>(null)
   const isPolishing = useRef(false)
   const [isInitialized, setIsInitialized] = useState(false)
-  const { raycaster, camera, gl } = useThree()
+  const { raycaster, camera, gl, get } = useThree()
 
   // Initialize the roughness map
   useEffect(() => {
@@ -118,8 +118,6 @@ function Polishable({ children }: { children: React.ReactNode }) {
       }
     }
   }
-
-  const { get } = useThree()
 
   // Handle mouse events
   useEffect(() => {
