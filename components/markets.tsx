@@ -55,7 +55,7 @@ export function Monitor(props: ThreeElements['mesh']) {
     context.fillStyle = 'black'
     context.fillRect(0, 0, canvas.width, canvas.height)
     context.strokeStyle = 'red'
-    context.lineWidth = 3
+    context.lineWidth = 15
     context.beginPath()
     for (let i = 0; i < chartData.length; i++) {
       const x = (i / chartData.length) * canvas.width
