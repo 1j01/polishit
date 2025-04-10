@@ -15,23 +15,11 @@ export function Monitor(props: ThreeElements['mesh']) {
     return canvas
   }, [])
 
-  // const chartData = useMemo(() => {
-  //   return new Float32Array(1024)
-  //   return Array.from({ length: 100 }, (_, i) => Math.sin(i / 10) * 50 + 50)
-  // }, [])
-  // const chartBounds = useMemo(() => {
-  //   return {
-  //     xMin: 0,
-  //     xMax: 100,
-  //     yMin: 0,
-  //     yMax: 100,
-  //   }
-  // }, [])
-
-  // TODO: handle state in react way (doesn't matter much, and this was easier to think about, when deciding what state I want)
-  const chartData: number[] = []
-  let t = 0
-  let y = 0
+  const chartData = useMemo(() => {
+    return Array.from({ length: 100 }, (_, i) => Math.sin(i / 10) * 50 + Math.random() * 3)
+  }, [])
+  const t = useRef(0)
+  const y = useRef(0)
 
   useFrame(() => {
     const context = canvas.getContext('2d')
@@ -39,9 +27,9 @@ export function Monitor(props: ThreeElements['mesh']) {
 
     // Update chart data
     // TODO: slow down the update rate
-    t += 0.01
-    y += (Math.random() - 0.5) * 2 + 0.1
-    chartData.push(y)
+    t.current += 0.01
+    y.current += (Math.random() - 0.5) * 2 + 0.1
+    chartData.push(y.current)
     if (chartData.length > 100) {
       chartData.shift()
     }
