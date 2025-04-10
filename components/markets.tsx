@@ -2,11 +2,11 @@
 
 import * as THREE from 'three'
 import { useRef, useMemo, useEffect } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { ThreeElements, useFrame } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
 import { FunctionCurve3 } from '@/lib/FunctionCurve3'
 
-export function Monitor() {
+export function Monitor(props: ThreeElements['mesh']) {
   const textureRef = useRef<THREE.CanvasTexture>(null!)
   const canvas = useMemo(() => {
     const canvas = document.createElement('canvas')
@@ -72,7 +72,7 @@ export function Monitor() {
   })
 
   return (
-    <mesh position={[-2, 4, 0]} rotation={[0, Math.PI / 2, 0]} scale={[17, 10, 1]}>
+    <mesh {...props}>
       <planeGeometry />
       <meshBasicMaterial toneMapped={false}>
         <canvasTexture attach="map" args={[canvas]} colorSpace={THREE.SRGBColorSpace} ref={textureRef} />

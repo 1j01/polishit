@@ -24,7 +24,7 @@ export default function PolishingSimulator() {
         <primitive object={turdGeometry} />
       </Polishable>
       <Environment preset="studio" frames={degraded ? 1 : Infinity} resolution={256} >
-        <Monitor />
+        <Monitor position={[-2, 4, 0]} rotation={[0, Math.PI / 2, 0]} scale={[17, 10, 1]} />
       </Environment>
       <PerformanceMonitor onDecline={() => setDegraded(true)} />
       <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={5} blur={2.5} far={4} />
