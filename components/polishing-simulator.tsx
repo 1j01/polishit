@@ -6,6 +6,7 @@ import { OrbitControls, Environment, ContactShadows, PerformanceMonitor } from "
 import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "../lib/turd-geometry"
 import { Monitor, PlummetingLine } from "./markets"
+import { YouTubeEmbed } from "./youtube"
 
 export default function PolishingSimulator() {
   const [degraded, setDegraded] = useState(false)
@@ -16,6 +17,9 @@ export default function PolishingSimulator() {
     <div style={{ position: "absolute", top: 0, left: 0, padding: "1rem" }}>
       <div style={{ fontSize: "2rem" }}>Polish: {(polish / maxPolishable * 100).toFixed(0)}%</div>
       <div style={{ fontSize: "0.9rem" }}>{degraded ? "Some visual effects have been disabled for performance." : ""}</div>
+    </div>
+    <div style={{ position: "absolute", bottom: 0, left: 0, padding: "1rem" }}>
+      <YouTubeEmbed />
     </div>
     <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
       <ambientLight intensity={0.5} />
