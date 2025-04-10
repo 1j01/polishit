@@ -5,7 +5,7 @@ import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Environment, ContactShadows, PerformanceMonitor } from "@react-three/drei"
 import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "../lib/turd-geometry"
-import { Monitor, PlummetingLine } from "./markets"
+import { Monitor } from "./markets"
 
 export default function PolishingSimulator() {
   const [degraded, setDegraded] = useState(false)
@@ -24,7 +24,6 @@ export default function PolishingSimulator() {
         <primitive object={turdGeometry} />
       </Polishable>
       <Environment preset="studio" frames={degraded ? 1 : Infinity} resolution={256} >
-        <PlummetingLine />
         <Monitor />
       </Environment>
       <PerformanceMonitor onDecline={() => setDegraded(true)} />

@@ -133,32 +133,32 @@ export function Monitor() {
 // }
 
 
-export function PlummetingLine({ pointsCount = 100, speed = 0.5 }) {
+// export function PlummetingLine({ pointsCount = 100, speed = 0.5 }) {
 
-  const lineGeometry = useMemo(() => {
-    const segments = 100
+//   const lineGeometry = useMemo(() => {
+//     const segments = 100
 
-    const curve = new FunctionCurve3((t, optionalTarget) => {
-      optionalTarget ??= new THREE.Vector3()
+//     const curve = new FunctionCurve3((t, optionalTarget) => {
+//       optionalTarget ??= new THREE.Vector3()
 
-      const x = (t) * 10
-      const y = -Math.pow(t, 2) * 5 // parabola-like drop
-      const z = 0 // flat line
+//       const x = (t) * 10
+//       const y = -Math.pow(t, 2) * 5 // parabola-like drop
+//       const z = 0 // flat line
 
-      return optionalTarget.set(x, y, z)
-    })
+//       return optionalTarget.set(x, y, z)
+//     })
 
-    return new THREE.TubeGeometry(curve, segments, 0.1, 3, false)
+//     return new THREE.TubeGeometry(curve, segments, 0.1, 3, false)
 
-  }, [])
-  return (
-    <mesh>
-      <primitive object={lineGeometry} />
-      <meshBasicMaterial color="red" />
-    </mesh>
-  )
+//   }, [])
+//   return (
+//     <mesh>
+//       <primitive object={lineGeometry} />
+//       <meshBasicMaterial color="red" />
+//     </mesh>
+//   )
 
-}
+// }
 
 // export function PlummetingLine({ width = 512, height = 256 }) {
 //   const canvasRef = useRef<HTMLCanvasElement>(null!)
