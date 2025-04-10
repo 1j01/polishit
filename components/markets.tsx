@@ -15,22 +15,57 @@ export function Monitor() {
     return canvas
   }, [])
 
+  // const chartData = useMemo(() => {
+  //   return new Float32Array(1024)
+  //   return Array.from({ length: 100 }, (_, i) => Math.sin(i / 10) * 50 + 50)
+  // }, [])
+  // const chartBounds = useMemo(() => {
+  //   return {
+  //     xMin: 0,
+  //     xMax: 100,
+  //     yMin: 0,
+  //     yMax: 100,
+  //   }
+  // }, [])
+
+  // TODO: handle state in react way (doesn't matter much, and this was easier to think about, when deciding what state I want)
+  const chartData: number[] = []
+  let t = 0
+  let y = 0
+
   useFrame(() => {
     const context = canvas.getContext('2d')
     if (!context) return null
 
+    // Update chart data
+    // TODO: slow down the update rate
+    t += 0.01
+    y += (Math.random() - 0.5) * 2 + 0.1
+    chartData.push(y)
+    if (chartData.length > 100) {
+      chartData.shift()
+    }
+    const chartBounds = {
+      xMin: 0,
+      xMax: 100,
+      yMin: Math.min(...chartData),
+      yMax: Math.max(...chartData),
+    }
+
     context.fillStyle = 'black'
     context.fillRect(0, 0, canvas.width, canvas.height)
-
-    context.beginPath()
-    context.moveTo(0, canvas.height * 0.2)
-    for (let x = 1; x < canvas.width; x++) {
-      const t = x / canvas.width
-      const y = canvas.height * (0.2 + 0.8 * Math.pow(t + Math.random() * 0.1, 2)) // steep drop
-      context.lineTo(x, y)
-    }
     context.strokeStyle = 'red'
     context.lineWidth = 3
+    context.beginPath()
+    for (let i = 0; i < chartData.length; i++) {
+      const x = (i / chartData.length) * canvas.width
+      const y = ((chartData[i] - chartBounds.yMin) / (chartBounds.yMax - chartBounds.yMin)) * canvas.height
+      if (i === 0) {
+        context.moveTo(x, y)
+      } else {
+        context.lineTo(x, y)
+      }
+    }
     context.stroke()
 
     textureRef.current.needsUpdate = true
