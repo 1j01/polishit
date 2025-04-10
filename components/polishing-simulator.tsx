@@ -13,13 +13,42 @@ export default function PolishingSimulator() {
   const [polish, setPolish] = useState(0)
   const turdGeometry = useMemo(makeTurdGeometry, [])
   const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
+
+  function onPlayerReady(event: YT.PlayerEvent) {
+    event.target.playVideo()
+  }
+
+  let done = false
+  function onPlayerStateChange(event: YT.PlayerEvent) {
+    console.log(event.data, event.target)
+    if (event.data == YT.PlayerState.PLAYING && !done) {
+      setTimeout(() => {
+        event.target.pauseVideo()
+        event.target.seekTo(0, true)
+        event.target.playVideo()
+      }, 6000)
+      done = true
+    }
+  }
+
   return (<>
     <div style={{ position: "absolute", top: 0, left: 0, padding: "1rem" }}>
       <div style={{ fontSize: "2rem" }}>Polish: {(polish / maxPolishable * 100).toFixed(0)}%</div>
       <div style={{ fontSize: "0.9rem" }}>{degraded ? "Some visual effects have been disabled for performance." : ""}</div>
     </div>
     <div style={{ position: "absolute", bottom: 0, left: 0, padding: "1rem" }}>
-      <YouTubeEmbed />
+      <YouTubeEmbed
+        height='390'
+        width='640'
+        videoId='zBflZLStKQg'
+        playerVars={{
+          'playsinline': 1
+        }}
+        events={{
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }}
+      />
     </div>
     <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
       <ambientLight intensity={0.5} />
