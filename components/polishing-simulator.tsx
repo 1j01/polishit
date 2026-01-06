@@ -10,6 +10,7 @@ import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "../lib/turd-geometry"
 import { Monitor } from "./markets"
 import { ShareDialog } from "./share-dialog"
+import { Button } from "@/components/ui/button"
 
 function Pedestal({ degraded = false, title = "No. 2", subtitle = "Do Your Duty" }) {
   const group = useRef<THREE.Group>(null)
@@ -120,6 +121,7 @@ function Pedestal({ degraded = false, title = "No. 2", subtitle = "Do Your Duty"
 function PolishingSimulatorContent() {
   const [degraded, setDegraded] = useState(false)
   const [polish, setPolish] = useState(0)
+  const [contextLost, setContextLost] = useState(false)
   const searchParams = useSearchParams()
   const title = searchParams.get("t") ?? "No. 2"
   const subtitle = searchParams.get("s") ?? "Do Your Duty"
@@ -151,8 +153,29 @@ function PolishingSimulatorContent() {
           ⚠️ Some effects have been disabled for performance.
         </div>
       )}
+      {contextLost && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+          <div className="text-center p-8 bg-white rounded-xl shadow-2xl border border-red-100 max-w-md mx-4">
+            <h2 className="text-2xl font-black text-red-600 mb-2">Graphics Context Lost</h2>
+            <p className="text-gray-600 mb-6">The graphics driver has crashed or was reset. Please reload the page to continue polishing.</p>
+            <Button onClick={() => window.location.reload()}>Reload Page</Button>
+          </div>
+        </div>
+      )}
     </div>
-    <Canvas camera={{ position: [0, 4, 8], fov: 50 }} className="touch-none block">
+    <Canvas
+      camera={{ position: [0, 4, 8], fov: 50 }}
+      className="touch-none block"
+      onCreated={({ gl }) => {
+        gl.domElement.addEventListener("webglcontextlost", (e) => {
+          e.preventDefault()
+          setContextLost(true)
+        })
+        gl.domElement.addEventListener("webglcontextrestored", () => {
+          setContextLost(false)
+        })
+      }}
+    >
       <ambientLight intensity={0.5} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
       <Polishable onPolish={setPolish}>
