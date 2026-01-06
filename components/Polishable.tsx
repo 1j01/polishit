@@ -124,12 +124,6 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
     const getUV = (event: PointerEvent) => {
       if (!meshRef.current || !contextRef.current || !canvasRef.current) return
 
-      // Update raycaster with pointer position
-      const rect = gl.domElement.getBoundingClientRect()
-      const x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-      const y = -((event.clientY - rect.top) / rect.height) * 2 + 1
-      raycaster.setFromCamera(new THREE.Vector2(x, y), camera)
-
       // Check for intersections
       const intersects = raycaster.intersectObject(meshRef.current)
       if (intersects.length > 0) {
