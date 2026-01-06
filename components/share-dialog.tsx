@@ -59,7 +59,7 @@ export function ShareDialog({ initialTitle, initialSubtitle }: ShareDialogProps)
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="title">Pedestal Title</Label>
+            <Label htmlFor="title">Plaque Title</Label>
             <Input
               id="title"
               value={shareTitle}
@@ -68,7 +68,7 @@ export function ShareDialog({ initialTitle, initialSubtitle }: ShareDialogProps)
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="subtitle">Pedestal Subtitle</Label>
+            <Label htmlFor="subtitle">Plaque Subtitle</Label>
             <Input
               id="subtitle"
               value={shareSubtitle}
