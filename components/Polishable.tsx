@@ -125,6 +125,11 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
       if (!meshRef.current || !contextRef.current || !canvasRef.current) return
 
       // Update raycaster with pointer position
+      // Normally this is updated automatically, but since we're using pointer events instead of
+      // r3f's built-in event system, we need to manually update the raycaster
+      // especially for touch events where the pointer always jumps when you touch the screen
+      // (without this it'll be left at where you last lifted your finger)
+      // TODO: investigate using r3f's event system
       const rect = gl.domElement.getBoundingClientRect()
       const x = ((event.clientX - rect.left) / rect.width) * 2 - 1
       const y = -((event.clientY - rect.top) / rect.height) * 2 + 1
