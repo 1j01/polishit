@@ -2,7 +2,9 @@
 
 In honor of Trump's 2025 market crash, we present to you the ultimate turd polishing simulator.
 
-![](./app/icon.ico)
+Experience it for yourself at [polish-it.web.app](https://polish-it.web.app/)
+
+[![](./app/icon.ico)](https://polish-it.web.app/)
 
 
 ## Features:
