@@ -13,7 +13,7 @@ export default function PolishingSimulator() {
   const turdGeometry = useMemo(makeTurdGeometry, [])
   const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
   return (<>
-    <div className="absolute top-0 left-0 w-full h-full p-8 pointer-events-none z-10 select-none">
+    <div className="absolute top-0 left-0 w-full h-full p-8 pointer-events-none z-10 select-none bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95)_0%,transparent_50%)]">
       <h1 className="text-4xl font-bold mb-4 text-black tracking-tight">Object Polishing Simulator</h1>
       <p className="mb-6 text-gray-700 max-w-md text-lg leading-relaxed shadow-sm">
         Click and drag on the object to polish it. The more you polish an area, the shinier it becomes.
