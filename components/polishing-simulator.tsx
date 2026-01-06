@@ -41,35 +41,35 @@ function Pedestal({ degraded = false, title = "No. 2", subtitle = "Do Your Duty"
   })
 
   return (
-    <group ref={group} position={[0, -3.0, 0]}>
-      <mesh position={[0, -1.8, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[1.5, 1.6, 0.4, 4]} />
+    <group ref={group} position={[0, -2.0, 0]}>
+      <mesh position={[0, -0.9, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[3.0, 3.2, 0.2, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
-      <mesh position={[0, -1.4, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[1.0, 1.45, 0.4, 4]} />
+      <mesh position={[0, -0.7, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[2.0, 2.9, 0.2, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
-      <mesh position={[0, 0.2, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[0.9, 1.0, 2.8, 4]} />
+      <mesh position={[0, 0.1, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[1.8, 2.0, 1.4, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
-      <mesh position={[0, 1.75, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[1.4, 0.9, 0.3, 4]} />
+      <mesh position={[0, 0.875, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[2.8, 1.8, 0.15, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
-      <mesh position={[0, 2.0, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[1.5, 1.5, 0.2, 4]} />
+      <mesh position={[0, 1.0, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[3.0, 3.0, 0.1, 4]} />
         <meshStandardMaterial color="#111" roughness={0.4} flatShading />
       </mesh>
 
       {!degraded && (
-        <mesh position={[0, 2.101, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 4]}>
-          <circleGeometry args={[1.5, 4]} />
+        <mesh position={[0, 1.051, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 4]}>
+          <circleGeometry args={[3.0, 4]} />
           {/* @ts-ignore */}
           <MeshReflectorMaterial
             blur={[300, 100]}
@@ -87,14 +87,14 @@ function Pedestal({ degraded = false, title = "No. 2", subtitle = "Do Your Duty"
         </mesh>
       )}
 
-      <group position={[0, 0.5, 0.68]} rotation={[0, 0, 0]}>
+      <group position={[0, 0.25, 1.36]} rotation={[0, 0, 0]}>
         <mesh>
-          <boxGeometry args={[0.8, 0.5, 0.05]} />
+          <boxGeometry args={[1.6, 0.25, 0.05]} />
           <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
         </mesh>
         <Text
-          position={[0, 0.08, 0.03]}
-          fontSize={0.12}
+          position={[0, 0.04, 0.03]}
+          fontSize={0.08}
           color="#000"
           anchorX="center"
           anchorY="middle"
@@ -102,8 +102,8 @@ function Pedestal({ degraded = false, title = "No. 2", subtitle = "Do Your Duty"
           {title}
         </Text>
         <Text
-          position={[0, -0.1, 0.03]}
-          fontSize={subtitle.length > 20 ? 0.04 : 0.06}
+          position={[0, -0.05, 0.03]}
+          fontSize={subtitle.length > 20 ? 0.03 : 0.04}
           color="#333"
           anchorX="center"
           anchorY="middle"
