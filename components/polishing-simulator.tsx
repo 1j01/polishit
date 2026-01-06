@@ -147,7 +147,7 @@ export default function PolishingSimulator() {
         <Monitor position={[2, 2, 0]} rotation={[0, -Math.PI / 2, 0]} scale={[8, 6, 1]} />
       </Environment>
       <PerformanceMonitor onDecline={() => setDegraded(true)} />
-      <ContactShadows position={[0, -3.9, 0]} opacity={0.4} scale={10} blur={2.5} far={4} />
+      {/* <ContactShadows position={[0, -3.9, 0]} opacity={0.4} scale={10} blur={2.5} far={4} /> */}
       <OrbitControls
         makeDefault
         enablePan={false}
