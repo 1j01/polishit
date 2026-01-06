@@ -45,9 +45,9 @@ export function ShareDialog({ initialTitle, initialSubtitle }: ShareDialogProps)
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon" className="rounded-full h-12 w-12 bg-white/80 backdrop-blur border-blue-200 hover:bg-white hover:text-blue-600 transition-colors">
+        <Button variant="outline" className="rounded-full h-12 px-4 gap-2 bg-white/80 backdrop-blur border-blue-200 hover:bg-white hover:text-blue-600 transition-colors">
           <Share2 className="h-5 w-5" />
-          <span className="sr-only">Share</span>
+          <span>Share</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
