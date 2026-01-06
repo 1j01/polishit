@@ -215,9 +215,9 @@ function PolishingSimulatorContent() {
           href="https://github.com/1j01/polishit/issues"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs md:text-sm font-medium text-blue-900/50 hover:text-blue-900 hover:underline transition-colors bg-white/30 backdrop-blur-sm px-2 py-1 md:px-3 md:py-1.5 rounded-lg"
+          className="text-xs md:text-sm font-medium text-blue-900/80 hover:text-blue-900 hover:underline transition-colors bg-white/50 backdrop-blur-sm px-2 py-1 md:px-3 md:py-1.5 rounded-lg"
         >
-          Request Features
+          Request features or report bugs
         </a>
       </div>
 
