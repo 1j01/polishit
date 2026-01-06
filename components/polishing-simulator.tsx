@@ -12,9 +12,56 @@ import { Monitor } from "./markets"
 import { ShareDialog } from "./share-dialog"
 import { Button } from "@/components/ui/button"
 
-function Pedestal({ degraded = false, title = "No. 2", subtitle = "Do Your Duty" }) {
+function Pedestal({
+  degraded = false,
+  title = "No. 2",
+  subtitle = "Do Your Duty",
+  baseWidth = 3.0,
+  columnHeight = 1.4
+}) {
   const group = useRef<THREE.Group>(null)
   const currentOpacity = useRef(0)
+
+  // Configure geometric ratios relative to baseWidth
+  const dims = useMemo(() => {
+    const bottomBase = { h: 0.2, rTop: baseWidth, rBot: baseWidth * 1.066 }
+    const transitionBase = { h: 0.2, rTop: baseWidth * 0.666, rBot: baseWidth * 0.966 }
+    const column = { h: columnHeight, rTop: baseWidth * 0.6, rBot: baseWidth * 0.666 }
+    const capFlair = { h: 0.15, rTop: baseWidth * 0.933, rBot: baseWidth * 0.6 }
+    const capTop = { h: 0.1, rTop: baseWidth, rBot: baseWidth }
+
+    // Calculate vertical positions (stacking upwards from 0)
+    let y = 0
+    const posBottomBase = y + bottomBase.h / 2; y += bottomBase.h
+    const posTransition = y + transitionBase.h / 2; y += transitionBase.h
+    const posColumn = y + column.h / 2; y += column.h
+    const posCapFlair = y + capFlair.h / 2; y += capFlair.h
+    const posCapTop = y + capTop.h / 2; y += capTop.h
+    const totalHeight = y
+
+    // Label positioning (approx 60% up the column)
+    const labelY = posColumn + (column.h * 0.15)
+    const labelZ = (column.rBot + column.rTop) / 2 * 0.707 * 1.05 // slightly in front of the face
+
+    // Offset everything so the top surface is at a known height (e.g. 0)
+    // Then we can position the group. But to keep existing logic working, 
+    // let's offset so the "top" matches the internal logic we had or adaptable.
+    // Previous: Group @ -2.0, Top @ 1.05. World Top @ -0.95.
+    // Let's make local top = 1.05 (arbitrary, but minimizes change).
+    // Offset = 1.05 - totalHeight.
+    const offset = 1.05 - totalHeight
+
+    return {
+      bottomBase, posBottomBase: posBottomBase + offset,
+      transitionBase, posTransition: posTransition + offset,
+      column, posColumn: posColumn + offset,
+      capFlair, posCapFlair: posCapFlair + offset,
+      capTop, posCapTop: posCapTop + offset,
+      labelY: labelY + offset,
+      labelZ,
+      topSurfaceY: totalHeight + offset
+    }
+  }, [baseWidth, columnHeight])
 
   useFrame(({ camera }, delta) => {
     if (!group.current) return
@@ -42,34 +89,40 @@ function Pedestal({ degraded = false, title = "No. 2", subtitle = "Do Your Duty"
 
   return (
     <group ref={group} position={[0, -2.0, 0]}>
-      <mesh position={[0, -0.9, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[3.0, 3.2, 0.2, 4]} />
+      {/* Base Bottom */}
+      <mesh position={[0, dims.posBottomBase, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[dims.bottomBase.rTop, dims.bottomBase.rBot, dims.bottomBase.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
-      <mesh position={[0, -0.7, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[2.0, 2.9, 0.2, 4]} />
+      {/* Base Transition */}
+      <mesh position={[0, dims.posTransition, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[dims.transitionBase.rTop, dims.transitionBase.rBot, dims.transitionBase.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
-      <mesh position={[0, 0.1, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[1.8, 2.0, 1.4, 4]} />
+      {/* Column */}
+      <mesh position={[0, dims.posColumn, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[dims.column.rTop, dims.column.rBot, dims.column.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
-      <mesh position={[0, 0.875, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[2.8, 1.8, 0.15, 4]} />
+      {/* Cap Flair */}
+      <mesh position={[0, dims.posCapFlair, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[dims.capFlair.rTop, dims.capFlair.rBot, dims.capFlair.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
-      <mesh position={[0, 1.0, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[3.0, 3.0, 0.1, 4]} />
+      {/* Cap Top */}
+      <mesh position={[0, dims.posCapTop, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[dims.capTop.rTop, dims.capTop.rBot, dims.capTop.h, 4]} />
         <meshStandardMaterial color="#111" roughness={0.4} flatShading />
       </mesh>
 
+      {/* Reflector */}
       {!degraded && (
-        <mesh position={[0, 1.051, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 4]}>
-          <circleGeometry args={[3.0, 4]} />
+        <mesh position={[0, dims.topSurfaceY + 0.001, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 4]}>
+          <circleGeometry args={[dims.capTop.rTop, 4]} />
           {/* @ts-ignore */}
           <MeshReflectorMaterial
             blur={[300, 100]}
@@ -87,9 +140,10 @@ function Pedestal({ degraded = false, title = "No. 2", subtitle = "Do Your Duty"
         </mesh>
       )}
 
-      <group position={[0, 0.25, 1.36]} rotation={[0, 0, 0]}>
+      {/* Label Group */}
+      <group position={[0, dims.labelY, dims.labelZ]} rotation={[0, 0, 0]}>
         <mesh>
-          <boxGeometry args={[1.6, 0.25, 0.05]} />
+          <boxGeometry args={[baseWidth * 0.53, 0.25, 0.05]} />
           <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
         </mesh>
         <Text
