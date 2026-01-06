@@ -210,6 +210,17 @@ function PolishingSimulatorContent() {
         </div>
       </div>
 
+      <div className="absolute bottom-6 right-6 pointer-events-auto">
+        <a
+          href="https://github.com/1j01/polishit/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm font-medium text-blue-900/50 hover:text-blue-900 hover:underline transition-colors bg-white/30 backdrop-blur-sm px-3 py-1.5 rounded-lg"
+        >
+          Request Features
+        </a>
+      </div>
+
       {degraded && (
         <div className="mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50 pointer-events-auto">
           ⚠️ Some effects have been disabled for performance.{" "}
