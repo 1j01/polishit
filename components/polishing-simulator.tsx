@@ -25,9 +25,9 @@ function Pedestal({
   // Configure geometric ratios relative to baseWidth
   const dims = useMemo(() => {
     const bottomBase = { h: 0.2, rTop: baseWidth, rBot: baseWidth * 1.066 }
-    const transitionBase = { h: 0.2, rTop: baseWidth * 0.666, rBot: baseWidth * 0.966 }
-    const column = { h: columnHeight, rTop: baseWidth * 0.6, rBot: baseWidth * 0.666 }
-    const capFlair = { h: 0.15, rTop: baseWidth * 0.933, rBot: baseWidth * 0.6 }
+    const transitionBase = { h: 0.2, rTop: baseWidth * 0.866, rBot: baseWidth * 0.966 }
+    const column = { h: columnHeight, rTop: baseWidth * 0.8, rBot: baseWidth * 0.866 }
+    const capFlair = { h: 0.15, rTop: baseWidth * 0.933, rBot: baseWidth * 0.8 }
     const capTop = { h: 0.1, rTop: baseWidth, rBot: baseWidth }
 
     // Calculate vertical positions (stacking upwards from 0)
@@ -143,12 +143,12 @@ function Pedestal({
       {/* Label Group */}
       <group position={[0, dims.labelY, dims.labelZ]} rotation={[0, 0, 0]}>
         <mesh>
-          <boxGeometry args={[baseWidth * 0.53, 0.25, 0.05]} />
+          <boxGeometry args={[baseWidth * 0.7, 0.35, 0.05]} />
           <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
         </mesh>
         <Text
-          position={[0, 0.04, 0.03]}
-          fontSize={0.08}
+          position={[0, 0.06, 0.03]}
+          fontSize={0.12}
           color="#000"
           anchorX="center"
           anchorY="middle"
@@ -156,8 +156,8 @@ function Pedestal({
           {title}
         </Text>
         <Text
-          position={[0, -0.05, 0.03]}
-          fontSize={subtitle.length > 20 ? 0.03 : 0.04}
+          position={[0, -0.08, 0.03]}
+          fontSize={subtitle.length > 20 ? 0.04 : 0.06}
           color="#333"
           anchorX="center"
           anchorY="middle"
