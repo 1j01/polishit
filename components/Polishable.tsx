@@ -92,33 +92,43 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
     return count / data.length
   }
 
-  // Handle mouse events
+  // Handle pointer events
   useEffect(() => {
     if (!gl.domElement) return
 
-    const handleMouseDown = (event: MouseEvent) => {
+    const handlePointerDown = (event: PointerEvent) => {
       if (getUV(event)) {
         isPolishing.current = true
         // @ts-ignore
         get().controls.enabled = false
+        gl.domElement.setPointerCapture(event.pointerId)
         polish(event)
       }
     }
 
-    const handleMouseMove = (event: MouseEvent) => {
+    const handlePointerMove = (event: PointerEvent) => {
       if (isPolishing.current) {
         polish(event)
       }
     }
 
-    const handleMouseUp = () => {
-      isPolishing.current = false
-      // @ts-ignore
-      get().controls.enabled = true
+    const handlePointerUp = (event: PointerEvent) => {
+      if (isPolishing.current) {
+        isPolishing.current = false
+        // @ts-ignore
+        get().controls.enabled = true
+        gl.domElement.releasePointerCapture(event.pointerId)
+      }
     }
 
-    const getUV = (event: MouseEvent) => {
+    const getUV = (event: PointerEvent) => {
       if (!meshRef.current || !contextRef.current || !canvasRef.current) return
+
+      // Update raycaster with pointer position
+      const rect = gl.domElement.getBoundingClientRect()
+      const x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+      const y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+      raycaster.setFromCamera(new THREE.Vector2(x, y), camera)
 
       // Check for intersections
       const intersects = raycaster.intersectObject(meshRef.current)
@@ -130,7 +140,7 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
       return null
     }
 
-    const polish = (event: MouseEvent) => {
+    const polish = (event: PointerEvent) => {
       if (!meshRef.current || !contextRef.current || !canvasRef.current) return
       const uv = getUV(event)
       if (uv) {
@@ -155,14 +165,16 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
       }
     }
 
-    gl.domElement.addEventListener("mousedown", handleMouseDown)
-    gl.domElement.addEventListener("mousemove", handleMouseMove)
-    window.addEventListener("mouseup", handleMouseUp)
+    gl.domElement.addEventListener("pointerdown", handlePointerDown)
+    gl.domElement.addEventListener("pointermove", handlePointerMove)
+    gl.domElement.addEventListener("pointerup", handlePointerUp)
+    gl.domElement.addEventListener("pointercancel", handlePointerUp)
 
     return () => {
-      gl.domElement.removeEventListener("mousedown", handleMouseDown)
-      gl.domElement.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("mouseup", handleMouseUp)
+      gl.domElement.removeEventListener("pointerdown", handlePointerDown)
+      gl.domElement.removeEventListener("pointermove", handlePointerMove)
+      gl.domElement.removeEventListener("pointerup", handlePointerUp)
+      gl.domElement.removeEventListener("pointercancel", handlePointerUp)
     }
   }, [gl, raycaster, camera])
 
