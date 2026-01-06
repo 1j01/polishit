@@ -24,7 +24,7 @@ export default function PolishingSimulator() {
       </div>
       {degraded && (
         <div className="mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50">
-          ⚠️ Performance mode enabled
+          ⚠️ Some effects have been disabled for performance.
         </div>
       )}
     </div>
