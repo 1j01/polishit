@@ -2,10 +2,51 @@
 
 import { useMemo, useState } from "react"
 import { Canvas } from "@react-three/fiber"
-import { OrbitControls, Environment, ContactShadows, PerformanceMonitor } from "@react-three/drei"
+import { OrbitControls, Environment, ContactShadows, PerformanceMonitor, Text } from "@react-three/drei"
 import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "../lib/turd-geometry"
 import { Monitor } from "./markets"
+
+function Pedestal() {
+  return (
+    <group position={[0, -2.5, 0]}>
+      <mesh receiveShadow castShadow>
+        <cylinderGeometry args={[1, 1.2, 3, 64]} />
+        <meshStandardMaterial color="#222" roughness={0.6} />
+      </mesh>
+      <mesh receiveShadow castShadow position={[0, 1.6, 0]}>
+        <cylinderGeometry args={[1.1, 1, 0.2, 64]} />
+        <meshStandardMaterial color="#111" roughness={0.4} />
+      </mesh>
+      <group position={[0, 0.5, 1.05]} rotation={[0, 0, 0]}>
+        <mesh>
+          <boxGeometry args={[0.8, 0.5, 0.1]} />
+          <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
+        </mesh>
+        <Text
+          position={[0, 0.08, 0.06]}
+          fontSize={0.12}
+          color="#000"
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.005}
+          outlineColor="#d4af37"
+        >
+          No. 2
+        </Text>
+        <Text
+          position={[0, -0.1, 0.06]}
+          fontSize={0.06}
+          color="#333"
+          anchorX="center"
+          anchorY="middle"
+        >
+          Do Your Duty
+        </Text>
+      </group>
+    </group>
+  )
+}
 
 export default function PolishingSimulator() {
   const [degraded, setDegraded] = useState(false)
@@ -34,13 +75,14 @@ export default function PolishingSimulator() {
       <Polishable onPolish={setPolish}>
         <primitive object={turdGeometry} />
       </Polishable>
+      <Pedestal />
       <Environment preset="studio" frames={degraded ? 1 : Infinity} resolution={256} >
         {/* <Monitor position={[-2, 4, 0]} rotation={[Math.PI * 0.2, Math.PI / 2, 0]} scale={[8, 6, 1]} /> */}
         <Monitor position={[-2, 2, 0]} rotation={[0, Math.PI / 2, 0]} scale={[8, 6, 1]} />
         <Monitor position={[2, 2, 0]} rotation={[0, -Math.PI / 2, 0]} scale={[8, 6, 1]} />
       </Environment>
       <PerformanceMonitor onDecline={() => setDegraded(true)} />
-      <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={5} blur={2.5} far={4} />
+      <ContactShadows position={[0, -3.9, 0]} opacity={0.4} scale={10} blur={2.5} far={4} />
       <OrbitControls
         makeDefault
         enablePan={false}
