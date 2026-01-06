@@ -13,11 +13,22 @@ export default function PolishingSimulator() {
   const turdGeometry = useMemo(makeTurdGeometry, [])
   const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
   return (<>
-    <div style={{ position: "absolute", top: 0, left: 0, padding: "1rem" }}>
-      <div style={{ fontSize: "2rem" }}>Polish: {(polish / maxPolishable * 100).toFixed(0)}%</div>
-      <div style={{ fontSize: "0.9rem" }}>{degraded ? "Some visual effects have been disabled for performance." : ""}</div>
+    <div className="absolute top-0 left-0 w-full h-full p-8 pointer-events-none z-10 select-none">
+      <h1 className="text-4xl font-bold mb-4 text-black tracking-tight">Object Polishing Simulator</h1>
+      <p className="mb-6 text-gray-700 max-w-md text-lg leading-relaxed shadow-sm">
+        Click and drag on the object to polish it. The more you polish an area, the shinier it becomes.
+      </p>
+      <div className="flex items-baseline gap-3">
+        <span className="text-7xl font-black text-black tracking-tighter">{(polish / maxPolishable * 100).toFixed(0)}%</span>
+        <span className="text-xl font-bold text-gray-500 uppercase tracking-widest">Polished</span>
+      </div>
+      {degraded && (
+        <div className="mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50">
+          ⚠️ Performance mode enabled
+        </div>
+      )}
     </div>
-    <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
+    <Canvas camera={{ position: [0, 0, 4], fov: 50 }} className="touch-none block">
       <ambientLight intensity={0.5} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
       <Polishable onPolish={setPolish}>
