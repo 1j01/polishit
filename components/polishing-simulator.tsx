@@ -191,17 +191,17 @@ function PolishingSimulatorContent() {
   const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
 
   return (<>
-    <div className="absolute top-0 left-0 w-full h-full p-8 pointer-events-none z-10 select-none bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95)_0%,transparent_50%)]">
+    <div className="absolute top-0 left-0 w-full h-full p-4 md:p-8 pointer-events-none z-10 select-none bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95)_0%,transparent_50%)]">
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-6xl font-black mb-4 text-blue-900 tracking-tighter">Polish<span className="italic text-red-600 inline-block" style={{ transform: "scaleX(1.4)", transformOrigin: "0" }}>It!</span></h1>
-          <p className="mb-6 text-blue-900/80 max-w-md text-lg leading-relaxed shadow-sm font-medium">
+          <h1 className="text-4xl md:text-6xl font-black mb-2 md:mb-4 text-blue-900 tracking-tighter">Polish<span className="italic text-red-600 inline-block" style={{ transform: "scaleX(1.4)", transformOrigin: "0" }}>It!</span></h1>
+          <p className="mb-4 md:mb-6 text-blue-900/80 max-w-xs md:max-w-md text-sm md:text-lg leading-relaxed shadow-sm font-medium">
             Click and drag on the object to polish it.<br />
             The harder you work, the better it looks!™
           </p>
-          <div className="flex items-baseline gap-3">
-            <span className="text-7xl font-black text-blue-900 tracking-tighter">{(polish / maxPolishable * 100).toFixed(0)}%</span>
-            <span className="text-xl font-bold text-red-600 uppercase tracking-widest">Polished</span>
+          <div className="flex items-baseline gap-2 md:gap-3">
+            <span className="text-5xl md:text-7xl font-black text-blue-900 tracking-tighter">{(polish / maxPolishable * 100).toFixed(0)}%</span>
+            <span className="text-base md:text-xl font-bold text-red-600 uppercase tracking-widest">Polished</span>
           </div>
         </div>
 
@@ -210,12 +210,12 @@ function PolishingSimulatorContent() {
         </div>
       </div>
 
-      <div className="absolute bottom-6 right-6 pointer-events-auto">
+      <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 pointer-events-auto">
         <a
           href="https://github.com/1j01/polishit/issues"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-medium text-blue-900/50 hover:text-blue-900 hover:underline transition-colors bg-white/30 backdrop-blur-sm px-3 py-1.5 rounded-lg"
+          className="text-xs md:text-sm font-medium text-blue-900/50 hover:text-blue-900 hover:underline transition-colors bg-white/30 backdrop-blur-sm px-2 py-1 md:px-3 md:py-1.5 rounded-lg"
         >
           Request Features
         </a>
