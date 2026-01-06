@@ -14,13 +14,13 @@ export default function PolishingSimulator() {
   const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
   return (<>
     <div className="absolute top-0 left-0 w-full h-full p-8 pointer-events-none z-10 select-none bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95)_0%,transparent_50%)]">
-      <h1 className="text-4xl font-bold mb-4 text-black tracking-tight">Object Polishing Simulator</h1>
-      <p className="mb-6 text-gray-700 max-w-md text-lg leading-relaxed shadow-sm">
+      <h1 className="text-6xl font-black mb-4 text-blue-900 tracking-tighter">Polish<span className="italic text-red-600">It!</span></h1>
+      <p className="mb-6 text-blue-900/80 max-w-md text-lg leading-relaxed shadow-sm font-medium">
         Click and drag on the object to polish it. The more you polish an area, the shinier it becomes.
       </p>
       <div className="flex items-baseline gap-3">
-        <span className="text-7xl font-black text-black tracking-tighter">{(polish / maxPolishable * 100).toFixed(0)}%</span>
-        <span className="text-xl font-bold text-gray-500 uppercase tracking-widest">Polished</span>
+        <span className="text-7xl font-black text-blue-900 tracking-tighter">{(polish / maxPolishable * 100).toFixed(0)}%</span>
+        <span className="text-xl font-bold text-red-600 uppercase tracking-widest">Polished</span>
       </div>
       {degraded && (
         <div className="mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50">
