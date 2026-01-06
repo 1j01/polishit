@@ -1,4 +1,4 @@
-# Polish*It!* Turd Polishing Simulator 2025
+# <img src="./public/logo.svg" alt="Polish It!" height="80"> Turd Polishing Simulator
 
 In honor of Donald Trump's staggering leadership we present to you the ultimate turd polishing simulator.
 
