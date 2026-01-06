@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState, useRef, Suspense } from "react"
+import { useMemo, useState, useRef, Suspense, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { OrbitControls, Environment, ContactShadows, PerformanceMonitor, Text, MeshReflectorMaterial } from "@react-three/drei"
@@ -178,6 +178,15 @@ function PolishingSimulatorContent() {
   const title = searchParams.get("t") ?? "No. 2"
   const subtitle = searchParams.get("s") ?? "Do Your Duty"
 
+  useEffect(() => {
+    try {
+      if (localStorage.getItem("polishit-context-lost")) {
+        setDegraded(true)
+        localStorage.removeItem("polishit-context-lost")
+      }
+    } catch (e) { /* ignore */ }
+  }, [])
+
   const turdGeometry = useMemo(makeTurdGeometry, [])
   const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
 
@@ -203,7 +212,10 @@ function PolishingSimulatorContent() {
 
       {degraded && (
         <div className="mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50">
-          ⚠️ Some effects have been disabled for performance.
+          ⚠️ Some effects have been disabled for performance.{" "}
+          <button onClick={() => setDegraded(false)} className="underline hover:text-amber-900 font-bold ml-1">
+            Enable?
+          </button>
         </div>
       )}
       {contextLost && (
@@ -223,9 +235,15 @@ function PolishingSimulatorContent() {
         gl.domElement.addEventListener("webglcontextlost", (e) => {
           e.preventDefault()
           setContextLost(true)
+          try {
+            localStorage.setItem("polishit-context-lost", "true")
+          } catch (e) { /* ignore */ }
         })
         gl.domElement.addEventListener("webglcontextrestored", () => {
           setContextLost(false)
+          try {
+            localStorage.removeItem("polishit-context-lost")
+          } catch (e) { /* ignore */ }
         })
       }}
     >
