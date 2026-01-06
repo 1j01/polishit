@@ -1,6 +1,6 @@
-# PolishIt! Turd Polishing Simulator 2025
+# Polish*It!* Turd Polishing Simulator 2025
 
-In honor of Trump's 2025 market crash, we present to you the ultimate turd polishing simulator.
+In honor of Donald Trump's staggering leadership we present to you the ultimate turd polishing simulator.
 
 Experience it for yourself at [polish-it.web.app](https://polish-it.web.app/)
 
