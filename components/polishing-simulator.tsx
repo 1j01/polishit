@@ -9,22 +9,39 @@ import { Monitor } from "./markets"
 
 function Pedestal() {
   return (
-    <group position={[0, -2.5, 0]}>
-      <mesh receiveShadow castShadow>
-        <cylinderGeometry args={[1, 1.2, 3, 64]} />
-        <meshStandardMaterial color="#222" roughness={0.6} />
+    <group position={[0, -3.0, 0]}>
+      <mesh position={[0, -1.8, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[1.5, 1.6, 0.4, 4]} />
+        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
-      <mesh receiveShadow castShadow position={[0, 1.6, 0]}>
-        <cylinderGeometry args={[1.1, 1, 0.2, 64]} />
-        <meshStandardMaterial color="#111" roughness={0.4} />
+      
+      <mesh position={[0, -1.4, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[1.0, 1.45, 0.4, 4]} />
+        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
-      <group position={[0, 0.5, 1.05]} rotation={[0, 0, 0]}>
+
+      <mesh position={[0, 0.2, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[0.9, 1.0, 2.8, 4]} />
+        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
+      </mesh>
+
+      <mesh position={[0, 1.75, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[1.4, 0.9, 0.3, 4]} />
+        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
+      </mesh>
+
+      <mesh position={[0, 2.0, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+        <cylinderGeometry args={[1.5, 1.5, 0.2, 4]} />
+        <meshStandardMaterial color="#111" roughness={0.4} flatShading />
+      </mesh>
+
+      <group position={[0, 0.5, 0.68]} rotation={[0, 0, 0]}>
         <mesh>
-          <boxGeometry args={[0.8, 0.5, 0.1]} />
+          <boxGeometry args={[0.8, 0.5, 0.05]} />
           <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
         </mesh>
         <Text
-          position={[0, 0.08, 0.06]}
+          position={[0, 0.08, 0.03]}
           fontSize={0.12}
           color="#000"
           anchorX="center"
@@ -35,7 +52,7 @@ function Pedestal() {
           No. 2
         </Text>
         <Text
-          position={[0, -0.1, 0.06]}
+          position={[0, -0.1, 0.03]}
           fontSize={0.06}
           color="#333"
           anchorX="center"
