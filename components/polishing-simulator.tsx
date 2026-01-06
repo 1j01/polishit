@@ -28,7 +28,7 @@ export default function PolishingSimulator() {
         </div>
       )}
     </div>
-    <Canvas camera={{ position: [0, 0, 4], fov: 50 }} className="touch-none block">
+    <Canvas camera={{ position: [0, 4, 8], fov: 50 }} className="touch-none block">
       <ambientLight intensity={0.5} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
       <Polishable onPolish={setPolish}>
