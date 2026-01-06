@@ -1,8 +1,8 @@
 "use client"
 
-import { useMemo, useState, useRef, Suspense, useEffect } from "react"
+import { useMemo, useState, useRef, Suspense, useEffect, memo } from "react"
 import { useSearchParams } from "next/navigation"
-import { Canvas, useFrame } from "@react-three/fiber"
+import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { OrbitControls, Environment, ContactShadows, PerformanceMonitor, Text, MeshReflectorMaterial } from "@react-three/drei"
 import * as THREE from "three"
 
@@ -12,6 +12,35 @@ import { Monitor } from "./markets"
 import { ShareDialog } from "./share-dialog"
 import { Button } from "@/components/ui/button"
 import { DEFAULT_PLAQUE_TITLE, DEFAULT_PLAQUE_SUBTITLE } from "@/lib/constants"
+
+// Extracted listener component for context loss
+function ContextLostListener({ setContextLost }: { setContextLost: (v: boolean) => void }) {
+  const { gl } = useThree()
+  useEffect(() => {
+    const handleContextLost = (e: Event) => {
+      e.preventDefault()
+      setContextLost(true)
+      try {
+        localStorage.setItem("polishit-context-lost", "true")
+      } catch (e) { /* ignore */ }
+    }
+    const handleContextRestored = () => {
+      setContextLost(false)
+      try {
+        localStorage.removeItem("polishit-context-lost")
+      } catch (e) { /* ignore */ }
+    }
+    
+    gl.domElement.addEventListener("webglcontextlost", handleContextLost)
+    gl.domElement.addEventListener("webglcontextrestored", handleContextRestored)
+    
+    return () => {
+      gl.domElement.removeEventListener("webglcontextlost", handleContextLost)
+      gl.domElement.removeEventListener("webglcontextrestored", handleContextRestored)
+    }
+  }, [gl, setContextLost])
+  return null
+}
 
 function Pedestal({
   degraded = false,
@@ -171,24 +200,77 @@ function Pedestal({
 }
 
 
-function PolishingSimulatorContent() {
-  let contextLostPreviously = false
-  try {
-    if (localStorage.getItem("polishit-context-lost")) {
-      contextLostPreviously = true
-      localStorage.removeItem("polishit-context-lost")
+const PolishingScene = memo(function PolishingScene({ 
+  degraded, 
+  setDegraded, 
+  title, 
+  subtitle, 
+  onPolish, 
+  setContextLost 
+}: {
+  degraded: boolean
+  setDegraded: (v: boolean) => void
+  title: string
+  subtitle: string
+  onPolish: (v: number) => void
+  setContextLost: (v: boolean) => void
+}) {
+  const turdGeometry = useMemo(makeTurdGeometry, [])
+  
+  // Dispose geometry on unmount
+  useEffect(() => {
+    return () => {
+      turdGeometry.dispose()
     }
-  } catch (e) { /* ignore */ }
+  }, [turdGeometry])
 
-  const [degraded, setDegraded] = useState(contextLostPreviously)
+  return (
+    <Canvas
+      camera={{ position: [0, 4, 8], fov: 50 }}
+      className="touch-none block"
+    >
+      <ContextLostListener setContextLost={setContextLost} />
+      <ambientLight intensity={0.5} />
+      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
+      <Polishable onPolish={onPolish}>
+        <primitive object={turdGeometry} />
+      </Polishable>
+      <Pedestal degraded={degraded} title={title} subtitle={subtitle} />
+      <Environment preset="studio" frames={degraded ? 1 : Infinity} resolution={256} >
+        <Monitor position={[-2, 2, 0]} rotation={[0, Math.PI / 2, 0]} scale={[8, 6, 1]} />
+        <Monitor position={[2, 2, 0]} rotation={[0, -Math.PI / 2, 0]} scale={[8, 6, 1]} />
+      </Environment>
+      <PerformanceMonitor onDecline={() => setDegraded(true)} />
+      <OrbitControls
+        makeDefault
+        enablePan={false}
+        minPolarAngle={Math.PI * 0.0}
+        maxPolarAngle={Math.PI * 0.8}
+        minDistance={3}
+        maxDistance={16}
+      />
+    </Canvas>
+  )
+})
+
+function PolishingSimulatorContent() {
+  const [degraded, setDegraded] = useState(false)
   const [polish, setPolish] = useState(0)
   const [contextLost, setContextLost] = useState(false)
   const searchParams = useSearchParams()
   const title = searchParams.get("t") ?? DEFAULT_PLAQUE_TITLE
   const subtitle = searchParams.get("s") ?? DEFAULT_PLAQUE_SUBTITLE
+  const maxPolishable = 0.173 
 
-  const turdGeometry = useMemo(makeTurdGeometry, [])
-  const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
+  // Handle local storage in effect to avoid hydration mismatch
+  useEffect(() => {
+    try {
+      if (localStorage.getItem("polishit-context-lost")) {
+        setDegraded(true)
+        localStorage.removeItem("polishit-context-lost")
+      }
+    } catch (e) { /* ignore */ }
+  }, [])
 
   return (<>
     <div className="absolute top-0 left-0 w-full h-full p-4 md:p-8 pointer-events-none z-10 select-none bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95)_0%,transparent_50%)]">
@@ -239,47 +321,14 @@ function PolishingSimulatorContent() {
         </div>
       )}
     </div>
-    <Canvas
-      camera={{ position: [0, 4, 8], fov: 50 }}
-      className="touch-none block"
-      onCreated={({ gl }) => {
-        gl.domElement.addEventListener("webglcontextlost", (e) => {
-          e.preventDefault()
-          setContextLost(true)
-          try {
-            localStorage.setItem("polishit-context-lost", "true")
-          } catch (e) { /* ignore */ }
-        })
-        gl.domElement.addEventListener("webglcontextrestored", () => {
-          setContextLost(false)
-          try {
-            localStorage.removeItem("polishit-context-lost")
-          } catch (e) { /* ignore */ }
-        })
-      }}
-    >
-      <ambientLight intensity={0.5} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
-      <Polishable onPolish={setPolish}>
-        <primitive object={turdGeometry} />
-      </Polishable>
-      <Pedestal degraded={degraded} title={title} subtitle={subtitle} />
-      <Environment preset="studio" frames={degraded ? 1 : Infinity} resolution={256} >
-        {/* <Monitor position={[-2, 4, 0]} rotation={[Math.PI * 0.2, Math.PI / 2, 0]} scale={[8, 6, 1]} /> */}
-        <Monitor position={[-2, 2, 0]} rotation={[0, Math.PI / 2, 0]} scale={[8, 6, 1]} />
-        <Monitor position={[2, 2, 0]} rotation={[0, -Math.PI / 2, 0]} scale={[8, 6, 1]} />
-      </Environment>
-      <PerformanceMonitor onDecline={() => setDegraded(true)} />
-      {/* <ContactShadows position={[0, -3.9, 0]} opacity={0.4} scale={10} blur={2.5} far={4} /> */}
-      <OrbitControls
-        makeDefault
-        enablePan={false}
-        minPolarAngle={Math.PI * 0.0}
-        maxPolarAngle={Math.PI * 0.8}
-        minDistance={3}
-        maxDistance={16}
-      />
-    </Canvas>
+    <PolishingScene 
+      degraded={degraded}
+      setDegraded={setDegraded}
+      title={title}
+      subtitle={subtitle}
+      onPolish={setPolish}
+      setContextLost={setContextLost}
+    />
   </>)
 }
 

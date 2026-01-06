@@ -11,7 +11,20 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
   const contextRef = useRef<CanvasRenderingContext2D | null>(null)
   const isPolishing = useRef(false)
   const [isInitialized, setIsInitialized] = useState(false)
-  const { raycaster, camera, gl, get } = useThree()
+  const { camera, gl, controls } = useThree((state) => ({
+    camera: state.camera,
+    gl: state.gl,
+    controls: state.controls as unknown as { enabled: boolean } | null
+  }))
+
+  useEffect(() => {
+    // Dipose texture on unmount
+    return () => {
+      if (roughnessMapRef.current) {
+        roughnessMapRef.current.dispose()
+      }
+    }
+  }, [])
 
   // Initialize the roughness map
   useEffect(() => {
@@ -89,88 +102,36 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
       }
     }
 
-    return count / data.length
+    return count / (data.length / 4)
   }
 
-  // Handle pointer events
-  useEffect(() => {
-    if (!gl.domElement) return
+  const polish = (uv: THREE.Vector2) => {
+    if (!contextRef.current || !canvasRef.current) return
 
-    const handlePointerDown = (event: PointerEvent) => {
-      if (getUV(event)) {
-        isPolishing.current = true
-        // @ts-ignore
-        get().controls.enabled = false
-        gl.domElement.setPointerCapture(event.pointerId)
-        polish(event)
+    // Convert UV to canvas coordinates
+    const canvasX = Math.floor(uv.x * canvasRef.current.width)
+    const canvasY = Math.floor((1 - uv.y) * canvasRef.current.height)
+
+    // Draw a polishing spot (darker = less rough)
+    drawPolishingSpotWrapped(canvasX, canvasY)
+
+    // Update the texture
+    if (roughnessMapRef.current) {
+      roughnessMapRef.current.needsUpdate = true
+    }
+
+    // Measure the polish (throttled/chance based to avoid heavy readback every frame)
+    // For now, let's just do it. Optimization: doing readback is slow (CPU-GPU sync). 
+    // Ideally we'd mirror the state in JS or use a compute shader, but for this simpler app:
+    if (Math.random() < 0.1) { // Simple stochastic throttling
+      const polishValue = measurePolish()
+      if (onPolish) {
+        onPolish(polishValue)
       }
     }
+  }
 
-    const handlePointerMove = (event: PointerEvent) => {
-      if (isPolishing.current) {
-        polish(event)
-      }
-    }
-
-    const handlePointerUp = (event: PointerEvent) => {
-      if (isPolishing.current) {
-        isPolishing.current = false
-        // @ts-ignore
-        get().controls.enabled = true
-        gl.domElement.releasePointerCapture(event.pointerId)
-      }
-    }
-
-    const getUV = (event: PointerEvent) => {
-      if (!meshRef.current || !contextRef.current || !canvasRef.current) return
-
-      // Check for intersections
-      const intersects = raycaster.intersectObject(meshRef.current)
-      if (intersects.length > 0) {
-        const uv = intersects[0].uv
-        if (!uv) return
-        return uv
-      }
-      return null
-    }
-
-    const polish = (event: PointerEvent) => {
-      if (!meshRef.current || !contextRef.current || !canvasRef.current) return
-      const uv = getUV(event)
-      if (uv) {
-
-        // Convert UV to canvas coordinates
-        const canvasX = Math.floor(uv.x * canvasRef.current.width)
-        const canvasY = Math.floor((1 - uv.y) * canvasRef.current.height)
-
-        // Draw a polishing spot (darker = less rough)
-        drawPolishingSpotWrapped(canvasX, canvasY)
-
-        // Update the texture
-        if (roughnessMapRef.current) {
-          roughnessMapRef.current.needsUpdate = true
-        }
-
-        // Measure the polish
-        const polishValue = measurePolish()
-        if (onPolish) {
-          onPolish(polishValue)
-        }
-      }
-    }
-
-    gl.domElement.addEventListener("pointerdown", handlePointerDown)
-    gl.domElement.addEventListener("pointermove", handlePointerMove)
-    gl.domElement.addEventListener("pointerup", handlePointerUp)
-    gl.domElement.addEventListener("pointercancel", handlePointerUp)
-
-    return () => {
-      gl.domElement.removeEventListener("pointerdown", handlePointerDown)
-      gl.domElement.removeEventListener("pointermove", handlePointerMove)
-      gl.domElement.removeEventListener("pointerup", handlePointerUp)
-      gl.domElement.removeEventListener("pointercancel", handlePointerUp)
-    }
-  }, [gl, raycaster, camera])
+  // Handle pointer events via R3F events on the mesh instead of global DOM listeners
 
   // Create material with the roughness map
   const material = useMemo(() => {
@@ -190,7 +151,31 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
   })
 
   return (
-    <mesh ref={meshRef} material={material}>
+    <mesh
+      ref={meshRef}
+      material={material}
+      onPointerDown={(e) => {
+        e.stopPropagation()
+        // @ts-ignore
+        e.target.setPointerCapture(e.pointerId)
+        if (controls) controls.enabled = false
+        isPolishing.current = true
+        if (e.uv) polish(e.uv)
+      }}
+      onPointerUp={(e) => {
+        e.stopPropagation()
+        // @ts-ignore
+        e.target.releasePointerCapture(e.pointerId)
+        if (controls) controls.enabled = true
+        isPolishing.current = false
+      }}
+      onPointerMove={(e) => {
+        if (isPolishing.current && e.uv) {
+          e.stopPropagation()
+          polish(e.uv)
+        }
+      }}
+    >
       {children}
     </mesh>
   )

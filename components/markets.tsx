@@ -15,9 +15,8 @@ export function Monitor(props: ThreeElements['mesh']) {
     return canvas
   }, [])
 
-  const chartData = useMemo(() => {
-    return Array.from({ length: 100 }, (_, i) => Math.sin(i / 10) * 50 + Math.random() * 3)
-  }, [])
+  const chartData = useRef(Array.from({ length: 100 }, (_, i) => Math.sin(i / 10) * 50 + Math.random() * 3))
+
   const t = useRef(0)
   const y = useRef(0)
 
@@ -29,15 +28,15 @@ export function Monitor(props: ThreeElements['mesh']) {
     // TODO: slow down the update rate
     t.current += 0.01
     y.current += (Math.random() - 0.5) * 2 + 0.1
-    chartData.push(y.current)
-    if (chartData.length > 100) {
-      chartData.shift()
+    chartData.current.push(y.current)
+    if (chartData.current.length > 100) {
+      chartData.current.shift()
     }
     const chartBounds = {
       xMin: 0,
       xMax: 100,
-      yMin: Math.min(...chartData),
-      yMax: Math.max(...chartData),
+      yMin: Math.min(...chartData.current),
+      yMax: Math.max(...chartData.current),
     }
 
     context.fillStyle = 'black'
@@ -45,9 +44,9 @@ export function Monitor(props: ThreeElements['mesh']) {
     context.strokeStyle = 'red'
     context.lineWidth = 15
     context.beginPath()
-    for (let i = 0; i < chartData.length; i++) {
-      const x = (i / chartData.length) * canvas.width
-      const y = ((chartData[i] - chartBounds.yMin) / (chartBounds.yMax - chartBounds.yMin)) * canvas.height
+    for (let i = 0; i < chartData.current.length; i++) {
+      const x = (i / chartData.current.length) * canvas.width
+      const y = ((chartData.current[i] - chartBounds.yMin) / (chartBounds.yMax - chartBounds.yMin)) * canvas.height
       if (i === 0) {
         context.moveTo(x, y)
       } else {
