@@ -210,7 +210,7 @@ function PolishingSimulatorContent() {
         </div>
       </div>
 
-      <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 pointer-events-auto">
+      <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 pointer-events-auto z-[51]">
         <a
           href="https://github.com/1j01/polishit/issues"
           target="_blank"
