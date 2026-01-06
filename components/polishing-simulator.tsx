@@ -171,21 +171,20 @@ function Pedestal({
 
 
 function PolishingSimulatorContent() {
-  const [degraded, setDegraded] = useState(false)
+  let contextLostPreviously = false
+  try {
+    if (localStorage.getItem("polishit-context-lost")) {
+      contextLostPreviously = true
+      localStorage.removeItem("polishit-context-lost")
+    }
+  } catch (e) { /* ignore */ }
+
+  const [degraded, setDegraded] = useState(contextLostPreviously)
   const [polish, setPolish] = useState(0)
   const [contextLost, setContextLost] = useState(false)
   const searchParams = useSearchParams()
   const title = searchParams.get("t") ?? "No. 2"
   const subtitle = searchParams.get("s") ?? "Do Your Duty"
-
-  useEffect(() => {
-    try {
-      if (localStorage.getItem("polishit-context-lost")) {
-        setDegraded(true)
-        localStorage.removeItem("polishit-context-lost")
-      }
-    } catch (e) { /* ignore */ }
-  }, [])
 
   const turdGeometry = useMemo(makeTurdGeometry, [])
   const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
