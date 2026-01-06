@@ -10,6 +10,7 @@ import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "../lib/turd-geometry"
 import { Monitor } from "./markets"
 import { ShareDialog } from "./share-dialog"
+import { Confetti } from "./confetti"
 import { Button } from "@/components/ui/button"
 import { DEFAULT_PLAQUE_TITLE, DEFAULT_PLAQUE_SUBTITLE } from "@/lib/constants"
 
@@ -252,6 +253,7 @@ function PolishingSimulatorContent() {
       <Polishable onPolish={setPolish}>
         <primitive object={turdGeometry} />
       </Polishable>
+      <Confetti isExploding={polish / maxPolishable >= 0.995} />
       <Pedestal degraded={degraded} title={title} subtitle={subtitle} />
       <Environment preset="studio" frames={degraded ? 1 : Infinity} resolution={256} >
         {/* <Monitor position={[-2, 4, 0]} rotation={[Math.PI * 0.2, Math.PI / 2, 0]} scale={[8, 6, 1]} /> */}
