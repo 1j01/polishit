@@ -98,8 +98,6 @@ function Pedestal({ degraded = false, title = "No. 2", subtitle = "Do Your Duty"
           color="#000"
           anchorX="center"
           anchorY="middle"
-          outlineWidth={0.005}
-          outlineColor="#d4af37"
         >
           {title}
         </Text>
