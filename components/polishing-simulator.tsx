@@ -10,10 +10,17 @@ import { Monitor } from "./markets"
 
 function Pedestal() {
   const group = useRef<THREE.Group>(null)
+  const currentOpacity = useRef(0)
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera }, delta) => {
     if (!group.current) return
-    const opacity = Math.max(0, Math.min(1, (camera.position.y + 0.5) * 1.5))
+    const targetOpacity = Math.max(0, Math.min(1, (camera.position.y + 0.5) * 1.5))
+
+    const maxSpeed = 2.5
+    const diff = targetOpacity - currentOpacity.current
+    currentOpacity.current += Math.sign(diff) * Math.min(Math.abs(diff), maxSpeed * delta)
+    const opacity = currentOpacity.current
+
     group.current.visible = opacity > 0
 
     group.current.traverse((child: any) => {
