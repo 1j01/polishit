@@ -11,11 +11,11 @@ Experience it for yourself at [**polish-it.web.app**](https://polish-it.web.app/
 
 - [x] **Realistic Turd Polishing**: Experience the thrill of polishing turds with advanced graphics ~~and physics.~~
 - [x] **Auto-Spin**: If you've watched the news, you know spin always helps with polishing turds.
+- [x] **Plaque Customization**: Share a custom link with personalized text by clicking the share button in the corner.
 - [ ] **Turd Customization**: Choose from a variety of turd types, colors, and decals to create your perfect turd.
   - Look, you don't get to pick and choose, but it's all part of the plan.
 - [ ] **Polishing Tools**: Use a range of tools, from basic to advanced, to achieve the perfect shine.
   - You can't afford any tools, so just use your hands.
-- [x] **Plaque Customization**: Share a custom link with personalized text by clicking the share button in the corner.
 
 ## Name BrAInstorming
 
