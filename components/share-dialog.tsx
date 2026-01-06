@@ -5,6 +5,7 @@ import { Share2, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { DEFAULT_PLAQUE_TITLE, DEFAULT_PLAQUE_SUBTITLE } from "@/lib/constants"
 import {
   Dialog,
   DialogContent,
@@ -27,10 +28,10 @@ export function ShareDialog({ initialTitle, initialSubtitle }: ShareDialogProps)
   const generateLink = () => {
     if (typeof window === "undefined") return ""
     const url = new URL(window.location.href)
-    if (shareTitle !== "No. 2") url.searchParams.set("t", shareTitle)
+    if (shareTitle !== DEFAULT_PLAQUE_TITLE) url.searchParams.set("t", shareTitle)
     else url.searchParams.delete("t")
 
-    if (shareSubtitle !== "Do Your Duty") url.searchParams.set("s", shareSubtitle)
+    if (shareSubtitle !== DEFAULT_PLAQUE_SUBTITLE) url.searchParams.set("s", shareSubtitle)
     else url.searchParams.delete("s")
 
     return url.toString()
@@ -64,7 +65,7 @@ export function ShareDialog({ initialTitle, initialSubtitle }: ShareDialogProps)
               id="title"
               value={shareTitle}
               onChange={(e) => setShareTitle(e.target.value)}
-              placeholder="No. 2"
+              placeholder={DEFAULT_PLAQUE_TITLE}
             />
           </div>
           <div className="grid gap-2">
@@ -73,7 +74,7 @@ export function ShareDialog({ initialTitle, initialSubtitle }: ShareDialogProps)
               id="subtitle"
               value={shareSubtitle}
               onChange={(e) => setShareSubtitle(e.target.value)}
-              placeholder="Do Your Duty"
+              placeholder={DEFAULT_PLAQUE_SUBTITLE}
             />
           </div>
           <div className="flex items-center space-x-2 pt-2">

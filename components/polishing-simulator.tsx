@@ -11,11 +11,12 @@ import { makeTurdGeometry } from "../lib/turd-geometry"
 import { Monitor } from "./markets"
 import { ShareDialog } from "./share-dialog"
 import { Button } from "@/components/ui/button"
+import { DEFAULT_PLAQUE_TITLE, DEFAULT_PLAQUE_SUBTITLE } from "@/lib/constants"
 
 function Pedestal({
   degraded = false,
-  title = "No. 2",
-  subtitle = "Do Your Duty",
+  title = DEFAULT_PLAQUE_TITLE,
+  subtitle = DEFAULT_PLAQUE_SUBTITLE,
   baseWidth = 3.0,
   columnHeight = 1.4
 }) {
@@ -183,8 +184,8 @@ function PolishingSimulatorContent() {
   const [polish, setPolish] = useState(0)
   const [contextLost, setContextLost] = useState(false)
   const searchParams = useSearchParams()
-  const title = searchParams.get("t") ?? "No. 2"
-  const subtitle = searchParams.get("s") ?? "Do Your Duty"
+  const title = searchParams.get("t") ?? DEFAULT_PLAQUE_TITLE
+  const subtitle = searchParams.get("s") ?? DEFAULT_PLAQUE_SUBTITLE
 
   const turdGeometry = useMemo(makeTurdGeometry, [])
   const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
