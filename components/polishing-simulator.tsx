@@ -1,44 +1,65 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import { Canvas } from "@react-three/fiber"
+import { useMemo, useState, useRef } from "react"
+import { Canvas, useFrame } from "@react-three/fiber"
 import { OrbitControls, Environment, ContactShadows, PerformanceMonitor, Text } from "@react-three/drei"
+import * as THREE from "three"
 import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "../lib/turd-geometry"
 import { Monitor } from "./markets"
 
 function Pedestal() {
+  const group = useRef<THREE.Group>(null)
+
+  useFrame(({ camera }) => {
+    if (!group.current) return
+    const opacity = Math.max(0, Math.min(1, (camera.position.y + 0.5) * 1.5))
+    group.current.visible = opacity > 0
+
+    group.current.traverse((child: any) => {
+      if (child.isMesh) {
+        const materials = Array.isArray(child.material) ? child.material : [child.material]
+        materials.forEach((mat: any) => {
+          if (mat) {
+            mat.transparent = true
+            mat.opacity = opacity
+          }
+        })
+      }
+    })
+  })
+
   return (
-    <group position={[0, -3.0, 0]}>
+    <group ref={group} position={[0, -3.0, 0]}>
       <mesh position={[0, -1.8, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[1.5, 1.6, 0.4, 4]} />
-        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
+        <meshStandardMaterial color="#222" roughness={0.6} flatShading transparent />
       </mesh>
-      
+
       <mesh position={[0, -1.4, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[1.0, 1.45, 0.4, 4]} />
-        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
+        <meshStandardMaterial color="#222" roughness={0.6} flatShading transparent />
       </mesh>
 
       <mesh position={[0, 0.2, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[0.9, 1.0, 2.8, 4]} />
-        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
+        <meshStandardMaterial color="#222" roughness={0.6} flatShading transparent />
       </mesh>
 
       <mesh position={[0, 1.75, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[1.4, 0.9, 0.3, 4]} />
-        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
+        <meshStandardMaterial color="#222" roughness={0.6} flatShading transparent />
       </mesh>
 
       <mesh position={[0, 2.0, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
         <cylinderGeometry args={[1.5, 1.5, 0.2, 4]} />
-        <meshStandardMaterial color="#111" roughness={0.4} flatShading />
+        <meshStandardMaterial color="#111" roughness={0.4} flatShading transparent />
       </mesh>
 
       <group position={[0, 0.5, 0.68]} rotation={[0, 0, 0]}>
         <mesh>
           <boxGeometry args={[0.8, 0.5, 0.05]} />
-          <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
+          <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} transparent />
         </mesh>
         <Text
           position={[0, 0.08, 0.03]}
@@ -48,6 +69,8 @@ function Pedestal() {
           anchorY="middle"
           outlineWidth={0.005}
           outlineColor="#d4af37"
+          fillOpacity={1} // Base opacity
+          outlineOpacity={1}
         >
           No. 2
         </Text>
@@ -57,6 +80,7 @@ function Pedestal() {
           color="#333"
           anchorX="center"
           anchorY="middle"
+          fillOpacity={1}
         >
           Do Your Duty
         </Text>
