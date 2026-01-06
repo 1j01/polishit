@@ -2,13 +2,13 @@
 
 import { useMemo, useState, useRef } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { OrbitControls, Environment, ContactShadows, PerformanceMonitor, Text } from "@react-three/drei"
+import { OrbitControls, Environment, ContactShadows, PerformanceMonitor, Text, MeshReflectorMaterial } from "@react-three/drei"
 import * as THREE from "three"
 import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "../lib/turd-geometry"
 import { Monitor } from "./markets"
 
-function Pedestal() {
+function Pedestal({ degraded = false }) {
   const group = useRef<THREE.Group>(null)
   const currentOpacity = useRef(0)
 
@@ -62,6 +62,26 @@ function Pedestal() {
         <cylinderGeometry args={[1.5, 1.5, 0.2, 4]} />
         <meshStandardMaterial color="#111" roughness={0.4} flatShading />
       </mesh>
+
+      {!degraded && (
+        <mesh position={[0, 2.101, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 4]}>
+          <circleGeometry args={[1.5, 4]} />
+          {/* @ts-ignore */}
+          <MeshReflectorMaterial
+            blur={[300, 100]}
+            resolution={1024}
+            mixBlur={1}
+            mixStrength={40}
+            roughness={1}
+            depthScale={1.2}
+            minDepthThreshold={0.4}
+            maxDepthThreshold={1.4}
+            color="#151515"
+            metalness={0.5}
+            mirror={0.5}
+          />
+        </mesh>
+      )}
 
       <group position={[0, 0.5, 0.68]} rotation={[0, 0, 0]}>
         <mesh>
@@ -120,7 +140,7 @@ export default function PolishingSimulator() {
       <Polishable onPolish={setPolish}>
         <primitive object={turdGeometry} />
       </Polishable>
-      <Pedestal />
+      <Pedestal degraded={degraded} />
       <Environment preset="studio" frames={degraded ? 1 : Infinity} resolution={256} >
         {/* <Monitor position={[-2, 4, 0]} rotation={[Math.PI * 0.2, Math.PI / 2, 0]} scale={[8, 6, 1]} /> */}
         <Monitor position={[-2, 2, 0]} rotation={[0, Math.PI / 2, 0]} scale={[8, 6, 1]} />
