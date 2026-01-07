@@ -271,7 +271,7 @@ function PolishingSimulatorContent() {
         <div>
           <h1 className="text-4xl md:text-6xl font-black mb-2 md:mb-4 text-blue-900 tracking-tighter">Polish<span className="italic text-red-600 inline-block" style={{ transform: "scaleX(1.4)", transformOrigin: "0" }}>It!</span></h1>
           <p className="mb-4 md:mb-6 text-blue-900/80 max-w-xs md:max-w-md text-sm md:text-lg leading-relaxed shadow-sm font-medium">
-            Click and drag on the object to polish it.<br />
+            Click and drag to polish.<br />
             The harder you work, the better it looks!™
           </p>
           <div className="flex items-baseline gap-2 md:gap-3">
