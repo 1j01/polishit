@@ -132,12 +132,12 @@ function Pedestal({
       {/* Label Group */}
       <group position={[0, labelY, labelZ]} rotation={[0, 0, 0]}>
         <mesh>
-          <boxGeometry args={[baseWidth * 0.7, 0.35, 0.05]} />
+          <boxGeometry args={[baseWidth * 0.75, 0.75, 0.06]} />
           <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
         </mesh>
         <Text
-          position={[0, 0.06, 0.03]}
-          fontSize={0.12}
+          position={[0, 0.08, 0.04]}
+          fontSize={0.2}
           color="#000"
           anchorX="center"
           anchorY="middle"
@@ -145,8 +145,8 @@ function Pedestal({
           {title}
         </Text>
         <Text
-          position={[0, -0.08, 0.03]}
-          fontSize={subtitle.length > 20 ? 0.04 : 0.06}
+          position={[0, -0.12, 0.04]}
+          fontSize={subtitle.length > 20 ? 0.09 : 0.12}
           color="#333"
           anchorX="center"
           anchorY="middle"
