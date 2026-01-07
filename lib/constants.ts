@@ -1,2 +1,6 @@
 export const DEFAULT_PLAQUE_TITLE = "Donald J. Trump"
-export const DEFAULT_PLAQUE_SUBTITLE = "He does his duty,\nOnto the American people" // "He Does His Duty" // "For staggering leadership"
+// "For staggering leadership"
+// "He Does His Duty"
+// "Behind every great man is fake news"
+// "He can read a crowd like a book...\n...if he could read a book"
+export const DEFAULT_PLAQUE_SUBTITLE = "He does his duty,\nOnto the American people"
