@@ -141,6 +141,9 @@ function Pedestal({
           color="#000"
           anchorX="center"
           anchorY="middle"
+          outlineColor="#f7c524"
+          outlineWidth={0.005}
+          outlineOffsetY={0.005}
         >
           {title}
         </Text>
@@ -150,6 +153,9 @@ function Pedestal({
           color="#333"
           anchorX="center"
           anchorY="middle"
+          outlineColor="#f7c524"
+          outlineWidth={0.002}
+          outlineOffsetY={0.004}
         >
           {subtitle}
         </Text>
