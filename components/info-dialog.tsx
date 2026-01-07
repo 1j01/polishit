@@ -38,16 +38,16 @@ export function InfoDialog() {
           <section>
             <h3 className="font-semibold mb-2">Project</h3>
             <p className="text-muted-foreground">
-              Created by <a 
-                href="https://isaiahodhner.io/" 
-                target="_blank" 
+              Created by <a
+                href="https://isaiahodhner.io/"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline"
               >Isaiah Odhner</a>.
               {" "}
-              <a 
-                href="https://github.com/1j01/polishit" 
-                target="_blank" 
+              <a
+                href="https://github.com/1j01/polishit"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline"
               >
@@ -79,6 +79,18 @@ export function InfoDialog() {
                 <AccordionTrigger>Q: Why is it so hard?</AccordionTrigger>
                 <AccordionContent>
                   A: If it were soft, polishing it would be much harder!
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger>Q: Why does the turd spin?</AccordionTrigger>
+                <AccordionContent>
+                  A: If you've watched the news, you know spin always helps with polishing turds.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger>Q: What has this world come to?</AccordionTrigger>
+                <AccordionContent>
+                  A: Institutions reward signaling over outcomes, outrage over compromise, profits over providence, and loyalty over competence—so the world reflects exactly what those systems select for. We are living in a late-stage capitalist dystopia where human connections are severed, there are no more forests for the children to play, and few hold onto hope that we can improve our systems enough to be a part of that change. But hey, at least we have PolishIt!™ to distract us from the existential dread.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
