@@ -174,6 +174,7 @@ function Pedestal({
 
 const PolishingScene = memo(function PolishingScene({
   degraded,
+  relaxedPerformance,
   title,
   subtitle,
   setPolish,
@@ -183,6 +184,7 @@ const PolishingScene = memo(function PolishingScene({
   confettiActive
 }: {
   degraded: boolean
+  relaxedPerformance: boolean
   title: string
   subtitle: string
   setPolish: (value: number) => void
@@ -228,7 +230,11 @@ const PolishingScene = memo(function PolishingScene({
         <Monitor position={[-2, 2, 0]} rotation={[0, Math.PI / 2, 0]} scale={[8, 6, 1]} />
         <Monitor position={[2, 2, 0]} rotation={[0, -Math.PI / 2, 0]} scale={[8, 6, 1]} />
       </Environment>
-      <PerformanceMonitor onDecline={() => setDegraded(true)} />
+      <PerformanceMonitor
+        onDecline={() => setDegraded(true)}
+        // onChange={(event) => console.log("perf change", event)}
+        bounds={(refresh) => relaxedPerformance ? [12, 50] : (refresh > 90 ? [50, 90] : [50, 60])}
+      />
       {/* <ContactShadows position={[0, -3.9, 0]} opacity={0.4} scale={10} blur={2.5} far={4} /> */}
       <OrbitControls
         makeDefault
@@ -252,6 +258,7 @@ function PolishingSimulatorContent() {
     } catch (e) { /* ignore */ }
     return contextLostPreviously
   })
+  const [relaxedPerformance, setRelaxedPerformance] = useState(false)
   const [polish, setPolish] = useState(0)
   const [contextLost, setContextLost] = useState(false)
   const searchParams = useSearchParams()
@@ -300,7 +307,7 @@ function PolishingSimulatorContent() {
         {degraded && (
           <div className="absolute bottom-4 left-4 mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50 pointer-events-auto">
             ⚠️ Perf mode{" "}
-            <button onClick={() => setDegraded(false)} className="underline hover:text-amber-900 font-bold ml-1">
+            <button onClick={() => { setDegraded(false); setRelaxedPerformance(true) }} className="underline hover:text-amber-900 font-bold ml-1">
               Re-enable effects?
             </button>
           </div>
@@ -319,6 +326,7 @@ function PolishingSimulatorContent() {
     <ClientOnly>
       <PolishingScene
         degraded={degraded}
+        relaxedPerformance={relaxedPerformance}
         title={title}
         subtitle={subtitle}
         setPolish={setPolish}
