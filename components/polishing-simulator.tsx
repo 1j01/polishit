@@ -11,8 +11,10 @@ import { makeTurdGeometry } from "../lib/turd-geometry"
 import { Monitor } from "./markets"
 import { ShareDialog } from "./share-dialog"
 import { Button } from "@/components/ui/button"
+import { Toaster } from "@/components/ui/toaster"
 import { DEFAULT_PLAQUE_TITLE, DEFAULT_PLAQUE_SUBTITLE } from "@/lib/constants"
 import { Confetti } from "./Confetti"
+import { useToast } from "@/hooks/use-toast"
 
 function Pedestal({
   degraded = false,
@@ -187,7 +189,7 @@ const PolishingScene = memo(function PolishingScene({
   relaxedPerformance: number
   title: string
   subtitle: string
-  setPolish: (value: number) => void
+  setPolish: (value: number, pointerType: string) => void
   turdGeometry: THREE.BufferGeometry
   setDegraded: (value: boolean) => void
   setContextLost: (value: boolean) => void
@@ -249,6 +251,7 @@ const PolishingScene = memo(function PolishingScene({
 })
 
 function PolishingSimulatorContent() {
+  const { toast } = useToast()
   const [degraded, setDegraded] = useState(() => {
     let contextLostPreviously = false
     try {
@@ -265,12 +268,36 @@ function PolishingSimulatorContent() {
   const title = searchParams.get("t") ?? DEFAULT_PLAQUE_TITLE
   const subtitle = searchParams.get("s") ?? DEFAULT_PLAQUE_SUBTITLE
 
+  const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
+  const interactionStats = useRef({ touch: 0, total: 0 })
+  const hasPolishedScreenToastShown = useRef(false)
+
+  const handlePolish = useCallback((value: number, pointerType: string) => {
+    setPolish(value)
+
+    if (pointerType === "touch" || pointerType === "mouse" || pointerType === "pen") {
+      interactionStats.current.total++
+      if (pointerType === "touch") {
+        interactionStats.current.touch++
+      }
+    }
+
+    if (value >= maxPolishable && !hasPolishedScreenToastShown.current) {
+      if (interactionStats.current.touch / interactionStats.current.total > 0.5) {
+        hasPolishedScreenToastShown.current = true
+        toast({
+          title: "Now polish your screen!",
+          description: "Or clean off the \"polishing compound\" you used.",
+          duration: 5000,
+        })
+      }
+    }
+  }, [toast])
+
   const turdGeometry = useMemo(makeTurdGeometry, [])
   useEffect(() => {
     return () => turdGeometry.dispose()
   }, [turdGeometry])
-
-  const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
 
   return (<>
     <div className="absolute top-0 left-0 w-full h-full p-4 md:p-8 pointer-events-none z-10 select-none bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95)_0%,transparent_50%)]">
@@ -321,6 +348,7 @@ function PolishingSimulatorContent() {
             </div>
           </div>
         )}
+        <Toaster />
       </ClientOnly>
     </div>
     <ClientOnly>
@@ -329,7 +357,7 @@ function PolishingSimulatorContent() {
         relaxedPerformance={relaxedPerformance}
         title={title}
         subtitle={subtitle}
-        setPolish={setPolish}
+        setPolish={handlePolish}
         turdGeometry={turdGeometry}
         setDegraded={setDegraded}
         setContextLost={setContextLost}

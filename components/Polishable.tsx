@@ -4,7 +4,7 @@ import { useThree, useFrame } from "@react-three/fiber"
 import { useRef, useState, useEffect, useMemo } from "react"
 import * as THREE from "three"
 
-export function Polishable({ children, onPolish }: { children: React.ReactNode, onPolish: (value: number) => void }) {
+export function Polishable({ children, onPolish }: { children: React.ReactNode, onPolish: (value: number, pointerType: string) => void }) {
   const meshRef = useRef<THREE.Mesh>(null)
   const roughnessMapRef = useRef<THREE.CanvasTexture | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -169,7 +169,7 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
         // Measure the polish
         const polishValue = measurePolish()
         if (onPolish) {
-          onPolish(polishValue)
+          onPolish(polishValue, event.pointerType)
         }
       }
     }
