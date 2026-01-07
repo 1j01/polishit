@@ -4,7 +4,7 @@ import { useThree, useFrame } from "@react-three/fiber"
 import { useRef, useState, useEffect, useMemo } from "react"
 import * as THREE from "three"
 
-export function Polishable({ children, onPolish }: { children: React.ReactNode, onPolish: (value: number) => void }) {
+export function Polishable({ children, onPolish, collisionGeometry }: { children: React.ReactNode, onPolish: (value: number) => void, collisionGeometry?: THREE.BufferGeometry }) {
   const meshRef = useRef<THREE.Mesh>(null)
   const roughnessMapRef = useRef<THREE.CanvasTexture | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -211,6 +211,11 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
   return (
     <mesh ref={meshRef} material={material}>
       {children}
+      {collisionGeometry && (
+        <mesh geometry={collisionGeometry} userData={{ confettiTarget: true }}>
+          <meshBasicMaterial visible={false} />
+        </mesh>
+      )}
     </mesh>
   )
 }

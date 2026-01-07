@@ -92,31 +92,31 @@ function Pedestal({
   return (
     <group ref={group} position={[0, -2.0, 0]}>
       {/* Base Bottom */}
-      <mesh position={[0, dims.posBottomBase, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+      <mesh position={[0, dims.posBottomBase, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
         <cylinderGeometry args={[dims.bottomBase.rTop, dims.bottomBase.rBot, dims.bottomBase.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
       {/* Base Transition */}
-      <mesh position={[0, dims.posTransition, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+      <mesh position={[0, dims.posTransition, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
         <cylinderGeometry args={[dims.transitionBase.rTop, dims.transitionBase.rBot, dims.transitionBase.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
       {/* Column */}
-      <mesh position={[0, dims.posColumn, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+      <mesh position={[0, dims.posColumn, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
         <cylinderGeometry args={[dims.column.rTop, dims.column.rBot, dims.column.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
       {/* Cap Flair */}
-      <mesh position={[0, dims.posCapFlair, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+      <mesh position={[0, dims.posCapFlair, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
         <cylinderGeometry args={[dims.capFlair.rTop, dims.capFlair.rBot, dims.capFlair.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
       {/* Cap Top */}
-      <mesh position={[0, dims.posCapTop, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+      <mesh position={[0, dims.posCapTop, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
         <cylinderGeometry args={[dims.capTop.rTop, dims.capTop.rBot, dims.capTop.h, 4]} />
         <meshStandardMaterial color="#111" roughness={0.4} flatShading />
       </mesh>
@@ -178,6 +178,7 @@ const PolishingScene = memo(function PolishingScene({
   subtitle,
   setPolish,
   turdGeometry,
+  turdCollisionGeometry,
   setDegraded,
   setContextLost,
   isFullyPolished
@@ -187,6 +188,7 @@ const PolishingScene = memo(function PolishingScene({
   subtitle: string
   setPolish: (value: number) => void
   turdGeometry: THREE.BufferGeometry
+  turdCollisionGeometry: THREE.BufferGeometry
   setDegraded: (value: boolean) => void
   setContextLost: (value: boolean) => void
   isFullyPolished: boolean
@@ -218,7 +220,7 @@ const PolishingScene = memo(function PolishingScene({
     >
       <ambientLight intensity={0.5} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
-      <Polishable onPolish={setPolish}>
+      <Polishable onPolish={setPolish} collisionGeometry={turdCollisionGeometry}>
         <primitive object={turdGeometry} />
       </Polishable>
       <Pedestal degraded={degraded} title={title} subtitle={subtitle} />
@@ -258,10 +260,15 @@ function PolishingSimulatorContent() {
   const title = searchParams.get("t") ?? DEFAULT_PLAQUE_TITLE
   const subtitle = searchParams.get("s") ?? DEFAULT_PLAQUE_SUBTITLE
 
-  const turdGeometry = useMemo(makeTurdGeometry, [])
+  const turdGeometry = useMemo(() => makeTurdGeometry(), [])
+  const turdCollisionGeometry = useMemo(() => makeTurdGeometry(60, 4), [])
+
   useEffect(() => {
-    return () => turdGeometry.dispose()
-  }, [turdGeometry])
+    return () => {
+      turdGeometry.dispose()
+      turdCollisionGeometry.dispose()
+    }
+  }, [turdGeometry, turdCollisionGeometry])
 
   const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
 
@@ -323,6 +330,7 @@ function PolishingSimulatorContent() {
         subtitle={subtitle}
         setPolish={setPolish}
         turdGeometry={turdGeometry}
+        turdCollisionGeometry={turdCollisionGeometry}
         setDegraded={setDegraded}
         setContextLost={setContextLost}
         isFullyPolished={polish >= maxPolishable}
