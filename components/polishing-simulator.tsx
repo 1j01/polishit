@@ -36,7 +36,7 @@ function Pedestal({
   const currentOpacity = useRef(0)
 
   // Configure geometric ratios relative to baseWidth
-  const { parts, labelY, labelZ, topSurfaceY, capRadius } = useMemo(() => {
+  const { parts, plaqueY, plaqueZ, plaqueWidth, plaqueHeight, topSurfaceY, capRadius } = useMemo(() => {
     const specs = [
       { id: "bottomBase", h: 0.2, rTop: 1.0, rBot: 1.066 },
       { id: "transitionBase", h: 0.2, rTop: 0.866, rBot: 0.966 },
@@ -65,14 +65,18 @@ function Pedestal({
     const column = parts.find(p => p.id === "column")!
     const capTop = parts.find(p => p.id === "capTop")!
 
-    const labelY = column.pos + (column.h * 0.15)
+    const plaqueY = column.pos + (column.h * 0.15)
     // slightly in front of the face
-    const labelZ = (column.rBot + column.rTop) / 2 * 0.707 * 1.05
+    const plaqueZ = (column.rBot + column.rTop) / 2 * 0.707 * 1.05
+    const plaqueWidth = baseWidth * 0.75//column.rTop * 1.2
+    const plaqueHeight = plaqueWidth * 0.4
 
     return {
       parts,
-      labelY,
-      labelZ,
+      plaqueY,
+      plaqueZ,
+      plaqueWidth,
+      plaqueHeight,
       topSurfaceY: totalHeight + offset,
       capRadius: capTop.rTop
     }
@@ -130,9 +134,9 @@ function Pedestal({
       )}
 
       {/* Label Group */}
-      <group position={[0, labelY, labelZ]} rotation={[0, 0, 0]}>
+      <group position={[0, plaqueY, plaqueZ]} rotation={[0, 0, 0]}>
         <mesh>
-          <boxGeometry args={[baseWidth * 0.75, 0.75, 0.06]} />
+          <boxGeometry args={[plaqueWidth, plaqueHeight, 0.06]} />
           <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
         </mesh>
         <Text
@@ -141,6 +145,7 @@ function Pedestal({
           color="#000"
           anchorX="center"
           anchorY="middle"
+          maxWidth={plaqueWidth * 0.9}
           outlineColor="#f7c524"
           outlineWidth={0.005}
           outlineOffsetY={0.005}
@@ -153,6 +158,7 @@ function Pedestal({
           color="#333"
           anchorX="center"
           anchorY="middle"
+          maxWidth={plaqueWidth * 0.9}
           outlineColor="#f7c524"
           outlineWidth={0.002}
           outlineOffsetY={0.004}
