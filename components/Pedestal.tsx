@@ -71,7 +71,7 @@ export function Pedestal({
 
   useFrame(({ camera }, delta) => {
     if (!group.current) return
-    const targetOpacity = Math.max(0, Math.min(1, (camera.position.y + 0.5) * 1.5))
+    const targetOpacity = Math.max(0, Math.min(1, (camera.position.y + 5) * 1.2))
 
     const maxSpeed = 2.5
     const diff = targetOpacity - currentOpacity.current
