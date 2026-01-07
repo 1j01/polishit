@@ -1,4 +1,4 @@
-# <img src="./public/logo.svg" alt="Polish It!" height="80"> Turd Polishing Simulator
+# <a href="https://polish-it.web.app"><img src="./public/logo.svg" alt="Polish It!" height="80"></a>
 
 In honor of Donald Trump's staggering leadership we present to you the ultimate turd polishing simulator.
 
