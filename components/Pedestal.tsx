@@ -131,6 +131,7 @@ export function Pedestal({
           color="#000"
           anchorX="center"
           anchorY="middle"
+          textAlign="center"
           maxWidth={plaqueWidth * 0.9}
           outlineColor="#f7c524"
           outlineWidth={0.005}
@@ -144,6 +145,7 @@ export function Pedestal({
           color="#333"
           anchorX="center"
           anchorY="middle"
+          textAlign="center"
           maxWidth={plaqueWidth * 0.9}
           outlineColor="#f7c524"
           outlineWidth={0.002}
