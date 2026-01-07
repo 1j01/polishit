@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Share2, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { DEFAULT_PLAQUE_TITLE, DEFAULT_PLAQUE_SUBTITLE } from "@/lib/constants"
 import {
@@ -70,7 +71,7 @@ export function ShareDialog({ initialTitle, initialSubtitle }: ShareDialogProps)
           </div>
           <div className="grid gap-2">
             <Label htmlFor="subtitle">Plaque Subtitle</Label>
-            <Input
+            <Textarea
               id="subtitle"
               value={shareSubtitle}
               onChange={(e) => setShareSubtitle(e.target.value)}
