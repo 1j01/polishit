@@ -9,7 +9,6 @@ const GRAVITY = -2.5
 const TERMINAL_VELOCITY = -5.0
 const SPREAD_XZ = 4
 const SPAWN_Y = 6
-const DESPAWN_Y = -4.0
 const GROUND_Y = -3.0 // Base of the pedestal (local 0 is offset, but pedestal is at -2.0, geometry varies)
 
 type Particle = {
@@ -177,24 +176,6 @@ export function Confetti({ active }: { active: boolean }) {
           }
         } else {
           p.position.copy(_nextPos)
-        }
-
-        // Wrap around
-        if (p.position.y < DESPAWN_Y && !p.landed) {
-          p.position.set(
-            (Math.random() - 0.5) * SPREAD_XZ,
-            SPAWN_Y,
-            (Math.random() - 0.5) * SPREAD_XZ
-          )
-          p.velocity.set(0, 0, 0)
-          p.velocity.add(new THREE.Vector3(
-            (Math.random() - 0.5) * 0.5,
-            Math.random() * -1 - 0.5,
-            (Math.random() - 0.5) * 0.5
-          ))
-          p.landed = false
-          p.parent = null
-          p.offsetMatrix = null
         }
       }
 
