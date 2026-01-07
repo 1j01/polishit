@@ -255,6 +255,10 @@ function PolishingSimulatorContent() {
   const subtitle = searchParams.get("s") ?? DEFAULT_PLAQUE_SUBTITLE
 
   const turdGeometry = useMemo(makeTurdGeometry, [])
+  useEffect(() => {
+    return () => turdGeometry.dispose()
+  }, [turdGeometry])
+
   const maxPolishable = 0.173 // approximate. not all surface is accessible. probably a good reason to use a proper 3D model instead of a procedural one.
 
   return (<>

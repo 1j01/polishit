@@ -42,6 +42,10 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
     roughnessMapRef.current = texture
 
     setIsInitialized(true)
+
+    return () => {
+      texture.dispose()
+    }
   }, [])
 
   function drawPolishingSpot(canvasX: number, canvasY: number, radius = 50, color = "rgba(32, 32, 32, 0.2)") {
@@ -192,6 +196,10 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
       roughness: 1,
     })
   }, [isInitialized])
+
+  useEffect(() => {
+    return () => material.dispose()
+  }, [material])
 
   // Slowly rotate the object
   useFrame((_: unknown, delta: number) => {
