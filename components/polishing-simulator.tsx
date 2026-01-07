@@ -10,6 +10,7 @@ import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "../lib/turd-geometry"
 import { Monitor } from "./markets"
 import { ShareDialog } from "./share-dialog"
+import { Confetti } from "./confetti"
 import { Button } from "@/components/ui/button"
 import { DEFAULT_PLAQUE_TITLE, DEFAULT_PLAQUE_SUBTITLE } from "@/lib/constants"
 
@@ -178,7 +179,8 @@ const PolishingScene = memo(function PolishingScene({
   setPolish,
   turdGeometry,
   setDegraded,
-  setContextLost
+  setContextLost,
+  isFullyPolished
 }: {
   degraded: boolean
   title: string
@@ -187,6 +189,7 @@ const PolishingScene = memo(function PolishingScene({
   turdGeometry: THREE.BufferGeometry
   setDegraded: (value: boolean) => void
   setContextLost: (value: boolean) => void
+  isFullyPolished: boolean
 }) {
   const handleCreated = useCallback(({ gl }: { gl: THREE.WebGLRenderer }) => {
     gl.domElement.addEventListener("webglcontextlost", (e) => {
@@ -234,6 +237,7 @@ const PolishingScene = memo(function PolishingScene({
         minDistance={3}
         maxDistance={16}
       />
+      <Confetti active={isFullyPolished || location.hash.includes("trigger-confetti")} />
     </Canvas>
   )
 })
@@ -321,6 +325,7 @@ function PolishingSimulatorContent() {
         turdGeometry={turdGeometry}
         setDegraded={setDegraded}
         setContextLost={setContextLost}
+        isFullyPolished={polish >= maxPolishable}
       />
     </ClientOnly>
   </>)
