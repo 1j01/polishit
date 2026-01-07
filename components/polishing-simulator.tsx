@@ -16,6 +16,15 @@ import { DEFAULT_PLAQUE_TITLE, DEFAULT_PLAQUE_SUBTITLE } from "@/lib/constants"
 import { Confetti } from "./Confetti"
 import { useToast } from "@/hooks/use-toast"
 
+function PedestalPart({ pos, dims, color = "#222", roughness = 0.6 }: { pos: number, dims: { rTop: number, rBot: number, h: number }, color?: string, roughness?: number }) {
+  return (
+    <mesh position={[0, pos, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
+      <cylinderGeometry args={[dims.rTop, dims.rBot, dims.h, 4]} />
+      <meshStandardMaterial color={color} roughness={roughness} flatShading />
+    </mesh>
+  )
+}
+
 function Pedestal({
   degraded = false,
   title = DEFAULT_PLAQUE_TITLE,
@@ -94,34 +103,19 @@ function Pedestal({
   return (
     <group ref={group} position={[0, -2.0, 0]}>
       {/* Base Bottom */}
-      <mesh position={[0, dims.posBottomBase, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
-        <cylinderGeometry args={[dims.bottomBase.rTop, dims.bottomBase.rBot, dims.bottomBase.h, 4]} />
-        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
-      </mesh>
+      <PedestalPart pos={dims.posBottomBase} dims={dims.bottomBase} />
 
       {/* Base Transition */}
-      <mesh position={[0, dims.posTransition, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
-        <cylinderGeometry args={[dims.transitionBase.rTop, dims.transitionBase.rBot, dims.transitionBase.h, 4]} />
-        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
-      </mesh>
+      <PedestalPart pos={dims.posTransition} dims={dims.transitionBase} />
 
       {/* Column */}
-      <mesh position={[0, dims.posColumn, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
-        <cylinderGeometry args={[dims.column.rTop, dims.column.rBot, dims.column.h, 4]} />
-        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
-      </mesh>
+      <PedestalPart pos={dims.posColumn} dims={dims.column} />
 
       {/* Cap Flair */}
-      <mesh position={[0, dims.posCapFlair, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
-        <cylinderGeometry args={[dims.capFlair.rTop, dims.capFlair.rBot, dims.capFlair.h, 4]} />
-        <meshStandardMaterial color="#222" roughness={0.6} flatShading />
-      </mesh>
+      <PedestalPart pos={dims.posCapFlair} dims={dims.capFlair} />
 
       {/* Cap Top */}
-      <mesh position={[0, dims.posCapTop, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
-        <cylinderGeometry args={[dims.capTop.rTop, dims.capTop.rBot, dims.capTop.h, 4]} />
-        <meshStandardMaterial color="#111" roughness={0.4} flatShading />
-      </mesh>
+      <PedestalPart pos={dims.posCapTop} dims={dims.capTop} color="#111" roughness={0.4} />
 
       {/* Reflector */}
       {!degraded && (
