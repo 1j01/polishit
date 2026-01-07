@@ -209,7 +209,7 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
   })
 
   return (
-    <mesh ref={meshRef} material={material}>
+    <mesh ref={meshRef} material={material} userData={{ confettiTarget: true }}>
       {children}
     </mesh>
   )

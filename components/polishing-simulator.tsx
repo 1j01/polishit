@@ -12,6 +12,7 @@ import { Monitor } from "./markets"
 import { ShareDialog } from "./share-dialog"
 import { Button } from "@/components/ui/button"
 import { DEFAULT_PLAQUE_TITLE, DEFAULT_PLAQUE_SUBTITLE } from "@/lib/constants"
+import { Confetti } from "./Confetti"
 
 function Pedestal({
   degraded = false,
@@ -91,31 +92,31 @@ function Pedestal({
   return (
     <group ref={group} position={[0, -2.0, 0]}>
       {/* Base Bottom */}
-      <mesh position={[0, dims.posBottomBase, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+      <mesh position={[0, dims.posBottomBase, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
         <cylinderGeometry args={[dims.bottomBase.rTop, dims.bottomBase.rBot, dims.bottomBase.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
       {/* Base Transition */}
-      <mesh position={[0, dims.posTransition, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+      <mesh position={[0, dims.posTransition, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
         <cylinderGeometry args={[dims.transitionBase.rTop, dims.transitionBase.rBot, dims.transitionBase.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
       {/* Column */}
-      <mesh position={[0, dims.posColumn, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+      <mesh position={[0, dims.posColumn, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
         <cylinderGeometry args={[dims.column.rTop, dims.column.rBot, dims.column.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
       {/* Cap Flair */}
-      <mesh position={[0, dims.posCapFlair, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+      <mesh position={[0, dims.posCapFlair, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
         <cylinderGeometry args={[dims.capFlair.rTop, dims.capFlair.rBot, dims.capFlair.h, 4]} />
         <meshStandardMaterial color="#222" roughness={0.6} flatShading />
       </mesh>
 
       {/* Cap Top */}
-      <mesh position={[0, dims.posCapTop, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow>
+      <mesh position={[0, dims.posCapTop, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
         <cylinderGeometry args={[dims.capTop.rTop, dims.capTop.rBot, dims.capTop.h, 4]} />
         <meshStandardMaterial color="#111" roughness={0.4} flatShading />
       </mesh>
@@ -178,7 +179,8 @@ const PolishingScene = memo(function PolishingScene({
   setPolish,
   turdGeometry,
   setDegraded,
-  setContextLost
+  setContextLost,
+  confettiActive
 }: {
   degraded: boolean
   title: string
@@ -187,6 +189,7 @@ const PolishingScene = memo(function PolishingScene({
   turdGeometry: THREE.BufferGeometry
   setDegraded: (value: boolean) => void
   setContextLost: (value: boolean) => void
+  confettiActive: boolean
 }) {
   const handleCreated = useCallback(({ gl }: { gl: THREE.WebGLRenderer }) => {
     gl.domElement.addEventListener("webglcontextlost", (e) => {
@@ -219,6 +222,7 @@ const PolishingScene = memo(function PolishingScene({
         <primitive object={turdGeometry} />
       </Polishable>
       <Pedestal degraded={degraded} title={title} subtitle={subtitle} />
+      <Confetti active={confettiActive} />
       <Environment preset="studio" frames={degraded ? 1 : Infinity} resolution={256} >
         {/* <Monitor position={[-2, 4, 0]} rotation={[Math.PI * 0.2, Math.PI / 2, 0]} scale={[8, 6, 1]} /> */}
         <Monitor position={[-2, 2, 0]} rotation={[0, Math.PI / 2, 0]} scale={[8, 6, 1]} />
@@ -321,6 +325,7 @@ function PolishingSimulatorContent() {
         turdGeometry={turdGeometry}
         setDegraded={setDegraded}
         setContextLost={setContextLost}
+        confettiActive={polish / maxPolishable >= 0.99}
       />
     </ClientOnly>
   </>)
