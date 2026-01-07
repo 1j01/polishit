@@ -184,7 +184,7 @@ const PolishingScene = memo(function PolishingScene({
   confettiActive
 }: {
   degraded: boolean
-  relaxedPerformance: boolean
+  relaxedPerformance: number
   title: string
   subtitle: string
   setPolish: (value: number) => void
@@ -233,7 +233,7 @@ const PolishingScene = memo(function PolishingScene({
       <PerformanceMonitor
         onDecline={() => setDegraded(true)}
         // onChange={(event) => console.log("perf change", event)}
-        bounds={(refresh) => relaxedPerformance ? [12, 50] : (refresh > 90 ? [50, 90] : [50, 60])}
+        bounds={(refresh) => relaxedPerformance ? [30 - relaxedPerformance * 10, 50] : (refresh > 90 ? [50, 90] : [50, 60])}
       />
       {/* <ContactShadows position={[0, -3.9, 0]} opacity={0.4} scale={10} blur={2.5} far={4} /> */}
       <OrbitControls
@@ -258,7 +258,7 @@ function PolishingSimulatorContent() {
     } catch (e) { /* ignore */ }
     return contextLostPreviously
   })
-  const [relaxedPerformance, setRelaxedPerformance] = useState(false)
+  const [relaxedPerformance, setRelaxedPerformance] = useState(0)
   const [polish, setPolish] = useState(0)
   const [contextLost, setContextLost] = useState(false)
   const searchParams = useSearchParams()
@@ -307,7 +307,7 @@ function PolishingSimulatorContent() {
         {degraded && (
           <div className="absolute bottom-4 left-4 mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50 pointer-events-auto">
             ⚠️ Perf mode{" "}
-            <button onClick={() => { setDegraded(false); setRelaxedPerformance(true) }} className="underline hover:text-amber-900 font-bold ml-1">
+            <button onClick={() => { setDegraded(false); setRelaxedPerformance(relaxedPerformance + 1) }} className="underline hover:text-amber-900 font-bold ml-1">
               Re-enable effects?
             </button>
           </div>
