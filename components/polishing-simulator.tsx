@@ -202,6 +202,9 @@ const PolishingScene = memo(function PolishingScene({
         localStorage.removeItem("polishit-context-lost")
       } catch (e) { /* ignore */ }
     })
+    try {
+      localStorage.removeItem("polishit-context-lost")
+    } catch (e) { /* ignore */ }
   }, [setContextLost])
 
   return (
@@ -241,7 +244,6 @@ function PolishingSimulatorContent() {
     try {
       if (localStorage.getItem("polishit-context-lost")) {
         contextLostPreviously = true
-        localStorage.removeItem("polishit-context-lost")
       }
     } catch (e) { /* ignore */ }
     return contextLostPreviously
