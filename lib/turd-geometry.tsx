@@ -23,7 +23,7 @@ export function makeTurdGeometry() {
     return optionalTarget.set(x, y, z)
   })
 
-  return new TubeGeometryExt(curve, segments, 0.9, 8, false, false, (t) => {
+  return new TubeGeometryExt(curve, segments, 0.9, 64, false, false, (t) => {
     return Math.pow(1 - t, 0.3) * Math.pow(t, 0.12)
   })
 }

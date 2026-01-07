@@ -193,6 +193,9 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
       color: "#cc6600",
       metalness: 1,
       roughnessMap: roughnessMapRef.current,
+      displacementMap: roughnessMapRef.current,
+      displacementScale: 0.1,
+      displacementBias: -0.05,
       roughness: 1,
     })
   }, [isInitialized])
