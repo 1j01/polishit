@@ -20,6 +20,8 @@ type Particle = {
   color: THREE.Color
   landed: boolean
   scale: number
+  parent: THREE.Object3D | null
+  offsetMatrix: THREE.Matrix4 | null
 }
 
 const COLORS = [
@@ -31,6 +33,8 @@ const _dummy = new THREE.Object3D()
 const _nextPos = new THREE.Vector3()
 const _rayDir = new THREE.Vector3()
 const _raycaster = new THREE.Raycaster()
+const _quaternion = new THREE.Quaternion()
+const _scale = new THREE.Vector3()
 
 export function Confetti({ active }: { active: boolean }) {
   const meshRef = useRef<THREE.InstancedMesh>(null)
@@ -84,7 +88,9 @@ export function Confetti({ active }: { active: boolean }) {
         rotationSpeed,
         color,
         landed: false,
-        scale: 0.15 + Math.random() * 0.1 // Bigger confetti
+        scale: 0.15 + Math.random() * 0.1, // Bigger confetti
+        parent: null,
+        offsetMatrix: null
       })
     }
     return temp
@@ -97,10 +103,14 @@ export function Confetti({ active }: { active: boolean }) {
     const dt = Math.min(delta, 0.1)
 
     particles.forEach((p, i) => {
-      // If landed, we still fall if we are just on the ground or stuck
-      // But we just skip physics for simplicity once landed.
+      // If landed, we stick to the object if possible
       if (p.landed) {
-        // No-op
+        if (p.parent && p.offsetMatrix) {
+          // Update position relative to parent
+          _dummy.matrix.copy(p.parent.matrixWorld).multiply(p.offsetMatrix)
+          _dummy.matrix.decompose(p.position, _quaternion, _scale)
+          p.rotation.setFromQuaternion(_quaternion)
+        }
       } else {
         // Gravity
         p.velocity.y += GRAVITY * dt
@@ -144,12 +154,23 @@ export function Confetti({ active }: { active: boolean }) {
               p.rotation.copy(_dummy.rotation)
             }
 
+            // Calculate parent offset
+            p.parent = hit.object
+            _dummy.position.copy(p.position)
+            _dummy.rotation.copy(p.rotation)
+            _dummy.scale.set(1, 1, 1) // Store transform without scale
+            _dummy.updateMatrix()
+
+            p.offsetMatrix = hit.object.matrixWorld.clone().invert().multiply(_dummy.matrix)
+
           } else {
             // Check ground plane at Y = -2.0
             if (_nextPos.y < GROUND_Y) {
               p.position.set(_nextPos.x, GROUND_Y + 0.01, _nextPos.z)
               p.landed = true
               p.rotation.set(-Math.PI / 2, 0, Math.random() * Math.PI * 2)
+              p.parent = null
+              p.offsetMatrix = null
             } else {
               p.position.copy(_nextPos)
             }
@@ -172,6 +193,8 @@ export function Confetti({ active }: { active: boolean }) {
             (Math.random() - 0.5) * 0.5
           ))
           p.landed = false
+          p.parent = null
+          p.offsetMatrix = null
         }
       }
 
