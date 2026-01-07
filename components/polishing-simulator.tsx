@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { OrbitControls, Environment, ContactShadows, PerformanceMonitor, Text, MeshReflectorMaterial } from "@react-three/drei"
 import * as THREE from "three"
-import { ClientOnly } from "react-client-only"
 
 import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "../lib/turd-geometry"
@@ -319,6 +318,17 @@ function PolishingSimulatorContent() {
       </ClientOnly >
     </div>
   </>)
+}
+
+function ClientOnly({ children }: { children: React.ReactNode }) {
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+  if (!isClient) {
+    return null
+  }
+  return <>{children}</>
 }
 
 export default function PolishingSimulator() {
