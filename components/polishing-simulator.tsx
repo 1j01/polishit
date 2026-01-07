@@ -286,7 +286,7 @@ function PolishingSimulatorContent() {
       </div>
 
       {degraded && (
-        <div className="mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50 pointer-events-auto">
+        <div className="absolute bottom-4 left-4 mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50 pointer-events-auto">
           ⚠️ Perf mode.{" "}
           <button onClick={() => setDegraded(false)} className="underline hover:text-amber-900 font-bold ml-1">
             Re-enable effects
