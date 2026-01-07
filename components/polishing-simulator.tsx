@@ -65,11 +65,11 @@ function Pedestal({
     const column = parts.find(p => p.id === "column")!
     const capTop = parts.find(p => p.id === "capTop")!
 
-    const plaqueY = column.pos + (column.h * 0.15)
+    const plaqueY = column.pos //+ (column.h * 0.15)
     // slightly in front of the face
     const plaqueZ = (column.rBot + column.rTop) / 2 * 0.707 * 1.05
-    const plaqueWidth = baseWidth * 0.75//column.rTop * 1.2
-    const plaqueHeight = plaqueWidth * 0.4
+    const plaqueWidth = column.rBot
+    const plaqueHeight = Math.min(column.h * 0.8, plaqueWidth * 0.4)
 
     return {
       parts,
@@ -140,7 +140,7 @@ function Pedestal({
           <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
         </mesh>
         <Text
-          position={[0, 0.08, 0.04]}
+          position={[0, 0.2, 0.04]}
           fontSize={0.2}
           color="#000"
           anchorX="center"
