@@ -236,15 +236,16 @@ const PolishingScene = memo(function PolishingScene({
 })
 
 function PolishingSimulatorContent() {
-  let contextLostPreviously = false
-  try {
-    if (localStorage.getItem("polishit-context-lost")) {
-      contextLostPreviously = true
-      localStorage.removeItem("polishit-context-lost")
-    }
-  } catch (e) { /* ignore */ }
-
-  const [degraded, setDegraded] = useState(contextLostPreviously)
+  const [degraded, setDegraded] = useState(() => {
+    let contextLostPreviously = false
+    try {
+      if (localStorage.getItem("polishit-context-lost")) {
+        contextLostPreviously = true
+        localStorage.removeItem("polishit-context-lost")
+      }
+    } catch (e) { /* ignore */ }
+    return contextLostPreviously
+  })
   const [polish, setPolish] = useState(0)
   const [contextLost, setContextLost] = useState(false)
   const searchParams = useSearchParams()
