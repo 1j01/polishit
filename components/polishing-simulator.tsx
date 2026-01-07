@@ -16,10 +16,10 @@ import { DEFAULT_PLAQUE_TITLE, DEFAULT_PLAQUE_SUBTITLE } from "@/lib/constants"
 import { Confetti } from "./Confetti"
 import { useToast } from "@/hooks/use-toast"
 
-function PedestalPart({ pos, dims, color = "#222", roughness = 0.6 }: { pos: number, dims: { rTop: number, rBot: number, h: number }, color?: string, roughness?: number }) {
+function PedestalPart({ rTop, rBot, h, pos, color = "#222", roughness = 0.6 }: { rTop: number, rBot: number, h: number, pos: number, color?: string, roughness?: number }) {
   return (
     <mesh position={[0, pos, 0]} rotation={[0, Math.PI / 4, 0]} receiveShadow castShadow userData={{ confettiTarget: true }}>
-      <cylinderGeometry args={[dims.rTop, dims.rBot, dims.h, 4]} />
+      <cylinderGeometry args={[rTop, rBot, h, 4]} />
       <meshStandardMaterial color={color} roughness={roughness} flatShading />
     </mesh>
   )
@@ -65,11 +65,11 @@ function Pedestal({
     const offset = 1.05 - totalHeight
 
     return {
-      bottomBase, posBottomBase: posBottomBase + offset,
-      transitionBase, posTransition: posTransition + offset,
-      column, posColumn: posColumn + offset,
-      capFlair, posCapFlair: posCapFlair + offset,
-      capTop, posCapTop: posCapTop + offset,
+      bottomBase: { ...bottomBase, pos: posBottomBase + offset },
+      transitionBase: { ...transitionBase, pos: posTransition + offset },
+      column: { ...column, pos: posColumn + offset },
+      capFlair: { ...capFlair, pos: posCapFlair + offset },
+      capTop: { ...capTop, pos: posCapTop + offset },
       labelY: labelY + offset,
       labelZ,
       topSurfaceY: totalHeight + offset
@@ -103,19 +103,19 @@ function Pedestal({
   return (
     <group ref={group} position={[0, -2.0, 0]}>
       {/* Base Bottom */}
-      <PedestalPart pos={dims.posBottomBase} dims={dims.bottomBase} />
+      <PedestalPart {...dims.bottomBase} />
 
       {/* Base Transition */}
-      <PedestalPart pos={dims.posTransition} dims={dims.transitionBase} />
+      <PedestalPart {...dims.transitionBase} />
 
       {/* Column */}
-      <PedestalPart pos={dims.posColumn} dims={dims.column} />
+      <PedestalPart {...dims.column} />
 
       {/* Cap Flair */}
-      <PedestalPart pos={dims.posCapFlair} dims={dims.capFlair} />
+      <PedestalPart {...dims.capFlair} />
 
       {/* Cap Top */}
-      <PedestalPart pos={dims.posCapTop} dims={dims.capTop} color="#111" roughness={0.4} />
+      <PedestalPart {...dims.capTop} color="#111" roughness={0.4} />
 
       {/* Reflector */}
       {!degraded && (
