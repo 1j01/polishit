@@ -51,7 +51,7 @@ export function ShareDialog({ initialTitle, initialSubtitle }: ShareDialogProps)
           <span className="text-sm md:text-base">Share</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Share PolishIt!</DialogTitle>
           <DialogDescription>
