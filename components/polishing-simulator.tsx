@@ -239,15 +239,23 @@ const PolishingScene = memo(function PolishingScene({
 })
 
 function PolishingSimulatorContent() {
-  const [degraded, setDegraded] = useState(() => {
-    let contextLostPreviously = false
+  // `isClient` flag exists to avoid SSR issues with localStorage based initialization
+  // while avoiding an initial render* with degraded=false, which, at worst, could cause a crash
+  // *of the scene; it might still render the rest redundantly
+  // TODO: use a helper like https://github.com/gfmio/react-client-only
+  // or https://github.com/kadirahq/react-no-ssr
+  const [isClient, setIsClient] = useState(false)
+  const [degraded, setDegraded] = useState(false)
+
+  useEffect(() => {
     try {
       if (localStorage.getItem("polishit-context-lost")) {
-        contextLostPreviously = true
+        setDegraded(true)
       }
     } catch (e) { /* ignore */ }
-    return contextLostPreviously
-  })
+    setIsClient(true)
+  }, [])
+
   const [polish, setPolish] = useState(0)
   const [contextLost, setContextLost] = useState(false)
   const searchParams = useSearchParams()
@@ -306,15 +314,17 @@ function PolishingSimulatorContent() {
         </div>
       )}
     </div>
-    <PolishingScene
-      degraded={degraded}
-      title={title}
-      subtitle={subtitle}
-      setPolish={setPolish}
-      turdGeometry={turdGeometry}
-      setDegraded={setDegraded}
-      setContextLost={setContextLost}
-    />
+    {isClient && (
+      <PolishingScene
+        degraded={degraded}
+        title={title}
+        subtitle={subtitle}
+        setPolish={setPolish}
+        turdGeometry={turdGeometry}
+        setDegraded={setDegraded}
+        setContextLost={setContextLost}
+      />
+    )}
   </>)
 }
 
