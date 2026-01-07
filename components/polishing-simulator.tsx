@@ -162,20 +162,20 @@ function PolishingSimulatorContent() {
         </div>
       </div>
 
-      <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 pointer-events-auto z-[51]">
+      <div className="absolute bottom-4 right-2 md:bottom-6 md:right-6 pointer-events-auto z-[51]">
         <a
           href="https://github.com/1j01/polishit/issues"
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs md:text-sm font-medium text-blue-900/80 hover:text-blue-900 hover:underline transition-colors bg-white/50 backdrop-blur-sm px-2 py-1 md:px-3 md:py-1.5 rounded-lg"
         >
-          Request features or report bugs
+          Feedback?
         </a>
       </div>
 
       <ClientOnly>
         {degraded && (
-          <div className="absolute bottom-4 left-4 mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50 pointer-events-auto">
+          <div className="absolute bottom-3 left-2 mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50 pointer-events-auto">
             ⚠️ Perf mode{" "}
             <button onClick={() => { setDegraded(false); setRelaxedPerformance(relaxedPerformance + 1) }} className="underline hover:text-amber-900 font-bold ml-1">
               Re-enable effects?
