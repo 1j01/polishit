@@ -36,43 +36,45 @@ function Pedestal({
   const currentOpacity = useRef(0)
 
   // Configure geometric ratios relative to baseWidth
-  const dims = useMemo(() => {
-    const bottomBase = { h: 0.2, rTop: baseWidth, rBot: baseWidth * 1.066 }
-    const transitionBase = { h: 0.2, rTop: baseWidth * 0.866, rBot: baseWidth * 0.966 }
-    const column = { h: columnHeight, rTop: baseWidth * 0.8, rBot: baseWidth * 0.866 }
-    const capFlair = { h: 0.15, rTop: baseWidth * 0.933, rBot: baseWidth * 0.8 }
-    const capTop = { h: 0.1, rTop: baseWidth, rBot: baseWidth }
+  const { parts, labelY, labelZ, topSurfaceY, capRadius } = useMemo(() => {
+    const specs = [
+      { id: "bottomBase", h: 0.2, rTop: 1.0, rBot: 1.066 },
+      { id: "transitionBase", h: 0.2, rTop: 0.866, rBot: 0.966 },
+      { id: "column", h: columnHeight, rTop: 0.8, rBot: 0.866 },
+      { id: "capFlair", h: 0.15, rTop: 0.933, rBot: 0.8 },
+      { id: "capTop", h: 0.1, rTop: 1.0, rBot: 1.0, color: "#111", roughness: 0.4 },
+    ]
 
-    // Calculate vertical positions (stacking upwards from 0)
-    let y = 0
-    const posBottomBase = y + bottomBase.h / 2; y += bottomBase.h
-    const posTransition = y + transitionBase.h / 2; y += transitionBase.h
-    const posColumn = y + column.h / 2; y += column.h
-    const posCapFlair = y + capFlair.h / 2; y += capFlair.h
-    const posCapTop = y + capTop.h / 2; y += capTop.h
-    const totalHeight = y
+    let currentY = 0
+    const positioned = specs.map((s) => {
+      const pos = currentY + s.h / 2
+      currentY += s.h
+      return {
+        ...s,
+        rTop: s.rTop * baseWidth,
+        rBot: s.rBot * baseWidth,
+        pos
+      }
+    })
 
-    // Label positioning (approx 60% up the column)
-    const labelY = posColumn + (column.h * 0.15)
-    const labelZ = (column.rBot + column.rTop) / 2 * 0.707 * 1.05 // slightly in front of the face
-
-    // Offset everything so the top surface is at a known height (e.g. 0)
-    // Then we can position the group. But to keep existing logic working, 
-    // let's offset so the "top" matches the internal logic we had or adaptable.
-    // Previous: Group @ -2.0, Top @ 1.05. World Top @ -0.95.
-    // Let's make local top = 1.05 (arbitrary, but minimizes change).
-    // Offset = 1.05 - totalHeight.
+    const totalHeight = currentY
     const offset = 1.05 - totalHeight
 
+    const parts = positioned.map(p => ({ ...p, pos: p.pos + offset }))
+
+    const column = parts.find(p => p.id === "column")!
+    const capTop = parts.find(p => p.id === "capTop")!
+
+    const labelY = column.pos + (column.h * 0.15)
+    // slightly in front of the face
+    const labelZ = (column.rBot + column.rTop) / 2 * 0.707 * 1.05
+
     return {
-      bottomBase: { ...bottomBase, pos: posBottomBase + offset },
-      transitionBase: { ...transitionBase, pos: posTransition + offset },
-      column: { ...column, pos: posColumn + offset },
-      capFlair: { ...capFlair, pos: posCapFlair + offset },
-      capTop: { ...capTop, pos: posCapTop + offset },
-      labelY: labelY + offset,
+      parts,
+      labelY,
       labelZ,
-      topSurfaceY: totalHeight + offset
+      topSurfaceY: totalHeight + offset,
+      capRadius: capTop.rTop
     }
   }, [baseWidth, columnHeight])
 
@@ -102,25 +104,14 @@ function Pedestal({
 
   return (
     <group ref={group} position={[0, -2.0, 0]}>
-      {/* Base Bottom */}
-      <PedestalPart {...dims.bottomBase} />
-
-      {/* Base Transition */}
-      <PedestalPart {...dims.transitionBase} />
-
-      {/* Column */}
-      <PedestalPart {...dims.column} />
-
-      {/* Cap Flair */}
-      <PedestalPart {...dims.capFlair} />
-
-      {/* Cap Top */}
-      <PedestalPart {...dims.capTop} color="#111" roughness={0.4} />
+      {parts.map(({ id, ...props }) => (
+        <PedestalPart key={id} {...props} />
+      ))}
 
       {/* Reflector */}
       {!degraded && (
-        <mesh position={[0, dims.topSurfaceY + 0.001, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 4]}>
-          <circleGeometry args={[dims.capTop.rTop, 4]} />
+        <mesh position={[0, topSurfaceY + 0.001, 0]} rotation={[-Math.PI / 2, 0, Math.PI / 4]}>
+          <circleGeometry args={[capRadius, 4]} />
           {/* @ts-ignore */}
           <MeshReflectorMaterial
             blur={[300, 100]}
@@ -139,7 +130,7 @@ function Pedestal({
       )}
 
       {/* Label Group */}
-      <group position={[0, dims.labelY, dims.labelZ]} rotation={[0, 0, 0]}>
+      <group position={[0, labelY, labelZ]} rotation={[0, 0, 0]}>
         <mesh>
           <boxGeometry args={[baseWidth * 0.7, 0.35, 0.05]} />
           <meshStandardMaterial color="#d4af37" metalness={0.8} roughness={0.2} />
