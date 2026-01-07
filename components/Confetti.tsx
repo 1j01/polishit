@@ -197,7 +197,7 @@ export function Confetti({ active }: { active: boolean }) {
 
 
   return (
-    <instancedMesh ref={meshRef} args={[undefined, undefined, COUNT]} frustumCulled={false}>
+    <instancedMesh ref={meshRef} args={[undefined, undefined, COUNT]} frustumCulled={false} visible={active}>
       <planeGeometry args={[1, 0.5]} />
       <meshStandardMaterial side={THREE.DoubleSide} metalness={0.8} roughness={0.2} />
     </instancedMesh>
