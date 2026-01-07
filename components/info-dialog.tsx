@@ -33,28 +33,26 @@ export function InfoDialog() {
             The ultimate polishing simulator.
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="space-y-4 text-sm">
           <section>
-            <h3 className="font-semibold mb-2">Created by</h3>
-            <p className="space-x-2">
-              <a 
+            <h3 className="font-semibold mb-2">Project</h3>
+            <p className="text-muted-foreground">
+              Created by <a 
                 href="https://isaiahodhner.io/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline"
-              >
-                Isaiah Odhner
-              </a>
-              <span className="text-muted-foreground">•</span>
+              >Isaiah Odhner</a>.
+              {" "}
               <a 
                 href="https://github.com/1j01/polishit" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline"
               >
-                GitHub
-              </a>
+                View on GitHub
+              </a>.
             </p>
           </section>
 
@@ -74,14 +72,17 @@ export function InfoDialog() {
             </p>
           </section>
 
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="item-1">
-              <AccordionTrigger>Q: Why is it so hard?</AccordionTrigger>
-              <AccordionContent>
-                A: If it were soft, polishing it would be much harder!
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          <section>
+            <h3 className="font-semibold mb-2">FAQ</h3>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>Q: Why is it so hard?</AccordionTrigger>
+                <AccordionContent>
+                  A: If it were soft, polishing it would be much harder!
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </section>
         </div>
       </DialogContent>
     </Dialog>
