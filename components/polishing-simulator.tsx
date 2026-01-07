@@ -306,17 +306,19 @@ function PolishingSimulatorContent() {
             </div>
           </div>
         )}
-        <PolishingScene
-          degraded={degraded}
-          title={title}
-          subtitle={subtitle}
-          setPolish={setPolish}
-          turdGeometry={turdGeometry}
-          setDegraded={setDegraded}
-          setContextLost={setContextLost}
-        />
-      </ClientOnly >
+      </ClientOnly>
     </div>
+    <ClientOnly>
+      <PolishingScene
+        degraded={degraded}
+        title={title}
+        subtitle={subtitle}
+        setPolish={setPolish}
+        turdGeometry={turdGeometry}
+        setDegraded={setDegraded}
+        setContextLost={setContextLost}
+      />
+    </ClientOnly>
   </>)
 }
 
