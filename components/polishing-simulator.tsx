@@ -10,6 +10,7 @@ import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "../lib/turd-geometry"
 import { Monitor } from "./markets"
 import { ShareDialog } from "./share-dialog"
+import { InfoDialog } from "./info-dialog"
 import { Button } from "@/components/ui/button"
 import { Toaster } from "@/components/ui/toaster"
 import { DEFAULT_PLAQUE_TITLE, DEFAULT_PLAQUE_SUBTITLE } from "@/lib/constants"
@@ -157,7 +158,8 @@ function PolishingSimulatorContent() {
           </div>
         </div>
 
-        <div className="pointer-events-auto">
+        <div className="pointer-events-auto flex items-center gap-2">
+          <InfoDialog />
           <ShareDialog initialTitle={title} initialSubtitle={subtitle} />
         </div>
       </div>
