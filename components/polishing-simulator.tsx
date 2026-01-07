@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { OrbitControls, Environment, ContactShadows, PerformanceMonitor, Text, MeshReflectorMaterial } from "@react-three/drei"
 import * as THREE from "three"
+import { ClientOnly } from "react-client-only"
 
 import { Polishable } from "./Polishable"
 import { makeTurdGeometry } from "../lib/turd-geometry"
@@ -239,23 +240,15 @@ const PolishingScene = memo(function PolishingScene({
 })
 
 function PolishingSimulatorContent() {
-  // `isClient` flag exists to avoid SSR issues with localStorage based initialization
-  // while avoiding an initial render* with degraded=false, which, at worst, could cause a crash
-  // *of the scene; it might still render the rest redundantly
-  // TODO: use a helper like https://github.com/gfmio/react-client-only
-  // or https://github.com/kadirahq/react-no-ssr
-  const [isClient, setIsClient] = useState(false)
-  const [degraded, setDegraded] = useState(false)
-
-  useEffect(() => {
+  const [degraded, setDegraded] = useState(() => {
+    let contextLostPreviously = false
     try {
       if (localStorage.getItem("polishit-context-lost")) {
-        setDegraded(true)
+        contextLostPreviously = true
       }
     } catch (e) { /* ignore */ }
-    setIsClient(true)
-  }, [])
-
+    return contextLostPreviously
+  })
   const [polish, setPolish] = useState(0)
   const [contextLost, setContextLost] = useState(false)
   const searchParams = useSearchParams()
@@ -296,35 +289,35 @@ function PolishingSimulatorContent() {
         </a>
       </div>
 
-      {degraded && (
-        <div className="absolute bottom-4 left-4 mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50 pointer-events-auto">
-          ⚠️ Perf mode{" "}
-          <button onClick={() => setDegraded(false)} className="underline hover:text-amber-900 font-bold ml-1">
-            Re-enable effects?
-          </button>
-        </div>
-      )}
-      {contextLost && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm pointer-events-auto select-text">
-          <div className="text-center p-8 bg-white rounded-xl shadow-2xl border border-red-100 max-w-md mx-4">
-            <h2 className="text-2xl font-black text-red-600 mb-2">Graphics Context Lost</h2>
-            <p className="text-gray-600 mb-6">The graphics driver has crashed or was reset. Please reload the page to continue polishing.</p>
-            <Button onClick={() => window.location.reload()}>Reload Page</Button>
+      <ClientOnly>
+        {degraded && (
+          <div className="absolute bottom-4 left-4 mt-4 text-sm text-amber-700 font-medium bg-amber-100/80 backdrop-blur inline-block px-3 py-1 rounded-full border border-amber-200/50 pointer-events-auto">
+            ⚠️ Perf mode{" "}
+            <button onClick={() => setDegraded(false)} className="underline hover:text-amber-900 font-bold ml-1">
+              Re-enable effects?
+            </button>
           </div>
-        </div>
-      )}
+        )}
+        {contextLost && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm pointer-events-auto select-text">
+            <div className="text-center p-8 bg-white rounded-xl shadow-2xl border border-red-100 max-w-md mx-4">
+              <h2 className="text-2xl font-black text-red-600 mb-2">Graphics Context Lost</h2>
+              <p className="text-gray-600 mb-6">The graphics driver has crashed or was reset. Please reload the page to continue polishing.</p>
+              <Button onClick={() => window.location.reload()}>Reload Page</Button>
+            </div>
+          </div>
+        )}
+        <PolishingScene
+          degraded={degraded}
+          title={title}
+          subtitle={subtitle}
+          setPolish={setPolish}
+          turdGeometry={turdGeometry}
+          setDegraded={setDegraded}
+          setContextLost={setContextLost}
+        />
+      </ClientOnly >
     </div>
-    {isClient && (
-      <PolishingScene
-        degraded={degraded}
-        title={title}
-        subtitle={subtitle}
-        setPolish={setPolish}
-        turdGeometry={turdGeometry}
-        setDegraded={setDegraded}
-        setContextLost={setContextLost}
-      />
-    )}
   </>)
 }
 
