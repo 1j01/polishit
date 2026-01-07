@@ -325,7 +325,8 @@ function PolishingSimulatorContent() {
         turdGeometry={turdGeometry}
         setDegraded={setDegraded}
         setContextLost={setContextLost}
-        confettiActive={polish >= maxPolishable || location.hash.includes("huzzah")}
+        confettiActive={polish >= maxPolishable || (typeof window !== "undefined" && window.location.hash.includes("huzzah"))}
+
       />
     </ClientOnly>
   </>)
