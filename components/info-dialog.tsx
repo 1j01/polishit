@@ -36,24 +36,30 @@ export function InfoDialog() {
 
         <div className="space-y-4 text-sm">
           <section>
-            <h3 className="font-semibold mb-2">Project</h3>
-            <p className="text-muted-foreground">
-              Created by <a
-                href="https://isaiahodhner.io/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
-              >Isaiah Odhner</a>.
-              {" "}
-              <a
-                href="https://github.com/1j01/polishit"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
-              >
-                View on GitHub
-              </a>.
-            </p>
+            <h3 className="font-semibold mb-2">Credits</h3>
+            <div className="flex flex-col gap-1 text-muted-foreground">
+              <p>
+                Created by{" "}
+                <a
+                  href="https://isaiahodhner.io/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  Isaiah Odhner
+                </a>
+              </p>
+              <p>
+                <a
+                  href="https://github.com/1j01/polishit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  Source code on GitHub
+                </a>
+              </p>
+            </div>
           </section>
 
           <section>
