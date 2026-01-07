@@ -21,7 +21,7 @@ export function Polishable({ children, onPolish }: { children: React.ReactNode, 
     canvas.height = 1024
     canvasRef.current = canvas
 
-    const context = canvas.getContext("2d")
+    const context = canvas.getContext("2d", { willReadFrequently: true })
     if (!context) return
     contextRef.current = context
 
