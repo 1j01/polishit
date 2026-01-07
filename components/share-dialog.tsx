@@ -29,12 +29,13 @@ export function ShareDialog({ initialTitle, initialSubtitle }: ShareDialogProps)
   const generateLink = () => {
     if (typeof window === "undefined") return ""
     const url = new URL(window.location.href)
-    if (shareTitle !== DEFAULT_PLAQUE_TITLE) url.searchParams.set("t", shareTitle)
-    else url.searchParams.delete("t")
-
-    if (shareSubtitle !== DEFAULT_PLAQUE_SUBTITLE) url.searchParams.set("s", shareSubtitle)
-    else url.searchParams.delete("s")
-
+    if (shareTitle !== DEFAULT_PLAQUE_TITLE || shareSubtitle !== DEFAULT_PLAQUE_SUBTITLE) {
+      url.searchParams.set("t", shareTitle)
+      url.searchParams.set("s", shareSubtitle)
+    } else {
+      url.searchParams.delete("t")
+      url.searchParams.delete("s")
+    }
     return url.toString()
   }
 
