@@ -325,7 +325,7 @@ function PolishingSimulatorContent() {
         turdGeometry={turdGeometry}
         setDegraded={setDegraded}
         setContextLost={setContextLost}
-        confettiActive={polish / maxPolishable >= 0.99}
+        confettiActive={polish >= maxPolishable}
       />
     </ClientOnly>
   </>)
