@@ -28,6 +28,7 @@ const nextConfig = {
     parallelServerCompiles: true,
   },
   output: 'export',
+  reactStrictMode: false,
 }
 
 if (userConfig) {
