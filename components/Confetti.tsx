@@ -203,7 +203,7 @@ export function Confetti({ active }: { active: boolean }) {
       _dummy.rotation.copy(p.rotation)
       _dummy.scale.set(p.scale, p.scale, p.scale)
       _dummy.updateMatrix()
-      meshRef.current.setMatrixAt(i, _dummy.matrix)
+      meshRef.current!.setMatrixAt(i, _dummy.matrix)
     })
 
     meshRef.current.instanceMatrix.needsUpdate = true
